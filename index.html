@@ -182,7 +182,7 @@
                 extraDetails = `
                     <h3>Eventos incluidos:</h3>
                     <ul>
-                          ${data.events.map(event => `<li><a href="https://kel-hendros.github.io/eventVisualizer?EventCode=${event}" target="_blank">${event}</a></li>`).join('')}
+                        ${data.events.map(event => `<li><a href="https://kel-hendros.github.io/eventVisualizer?EventCode=${event}" target="_blank">${event}</a></li>`).join('')}
                     </ul>
                     <p><strong>Template para Abono Físico (templateToPrint):</strong> ${templateToPrint}</p>
                 `;
@@ -216,37 +216,44 @@
             `;
 
             if (data.layout && data.layout.sections) {
-                layoutDetails.innerHTML = `<h2>Layout</h2>`;
+                layoutDetails.innerHTML = `
+            <h2>Layout</h2>
+            <div style="text-align: center;">
+                <img src="${data.layout.image ? data.layout.image.large : ''}" alt="Imagen del Estadio" style="width: 40%;">
+            </div>
+        `;
+
                 data.layout.sections.forEach(section => {
                     layoutDetails.innerHTML += `
-                        <button type="button" class="collapsible">
-                            <div>
-                                <p><strong>Section Code:</strong> ${section.code}</p>
-                                <p><strong>Section Name:</strong> ${section.name}</p>
+                <button type="button" class="collapsible" style="background-color:${section.color}">
+                    <div>
+                        <p><strong>Section Code:</strong> ${section.code}</p>
+                        <p><strong>Section Name:</strong> ${section.name}</p>
+                    </div>
+                </button>
+                <div class="content">
+                    ${section.sections ? section.sections.map(subSection => `
+                        <button type="button" class="collapsible" style="background-color:${subSection.color}">
+                            <div class="subsection-flex">
+                                <div>
+                                    <p><strong>Subsection Code:</strong> ${subSection.code}</p>
+                                    <p><strong>Subsection Name:</strong> ${subSection.name}</p>
+                                </div>
+                                <div>
+                                    <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + subSection.price.currency : 'No disponible'}</p>
+                                    <p><strong>Disabled:</strong> ${subSection.disabled} | <strong>Exclusive:</strong> ${subSection.exclusive}</p>
+                                </div>
                             </div>
                         </button>
                         <div class="content">
-                            ${section.sections ? section.sections.map(subSection => `
-                                <button type="button" class="collapsible">
-                                    <div class="subsection-flex">
-                                        <div>
-                                            <p><strong>Subsection Code:</strong> ${subSection.code}</p>
-                                            <p><strong>Subsection Name:</strong> ${subSection.name}</p>
-                                        </div>
-                                        <div>
-                                            <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + subSection.price.currency : 'No disponible'}</p>
-                                            <p><strong>Disabled:</strong> ${subSection.disabled} - <strong>Exclusive:</strong> ${subSection.exclusive}</p>
-                                        </div>
+                            <pre>${JSON.stringify(subSection, null, 2)}</pre>
                                     </div>
-                                </button>
-                                <div class="content">
-                                    <pre>${JSON.stringify(subSection, null, 2)}</pre>
-                                </div>
-                            `).join('') : ''}
-                        </div>
-                    `;
+                                `).join('') : ''}
+                            </div>
+                        `;
                 });
             }
+
 
             // Inicializar los botones de colapsar
             const coll = document.getElementsByClassName("collapsible");
