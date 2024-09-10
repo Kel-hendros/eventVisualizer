@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información de Evento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        input,
+        button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        input {
+            width: 400px;
+            /* Aumentar el ancho del cuadro de búsqueda */
+        }
+
+        .event-info {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            /* Bordes redondeados */
+        }
+
+        .layout-info {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 15px;
+            /* Bordes redondeados */
+        }
+
+        .event-info h2,
+        .layout-info h2 {
+            margin-top: 0;
+        }
+
+        .event-info h3 {
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .event-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-header h2 {
+            flex-grow: 1;
+        }
+
+        /* Styles for collapsible sections */
+        .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .active,
+        .collapsible:hover {
+            background-color: #555;
+        }
+
+        .content {
+            padding: 0 10px;
+            display: none;
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+
+        .content p {
+            margin: 0;
+        }
+
+        /* Flex row style for the subsection buttons */
+        .subsection-flex {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .subsection-flex p {
+            margin: 0;
+        }
+
+        .subsection-flex div {
+            flex-basis: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Buscar Información del Evento</h1>
+
+    <label for="eventCode">Código del Evento:</label>
+    <input type="text" id="eventCode" placeholder="Ingresa el código del evento" />
+    <button onclick="fetchEventData()">Buscar</button>
+
+    <div id="eventDetails" class="event-info"></div>
+    <div id="layoutDetails" class="layout-info"></div>
+    <div id="errorMessage" class="error"></div>
+
+    <script>
+        // Función para obtener el parámetro EventCode de la URL
+        function getEventCodeFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('EventCode');
+        }
+
+        // Asignar el valor del parámetro EventCode si existe
+        const eventCodeFromURL = getEventCodeFromURL();
+        const eventCodeInput = document.getElementById('eventCode');
+        if (eventCodeFromURL) {
+            eventCodeInput.value = eventCodeFromURL;
+            fetchEventData(); // Llamar automáticamente si ya viene el EventCode en la URL
+        }
+
+        // Función para realizar la petición a la API
+        function fetchEventData() {
+            const eventCode = document.getElementById('eventCode').value;
+            if (!eventCode) {
+                document.getElementById('errorMessage').textContent = 'Por favor, ingresa un código de evento.';
+                return;
+            }
+
+            const apiUrl = `https://edge.bitsports-prod.co/api/composite-service/events/${eventCode}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => displayEventData(data))
+                .catch(error => {
+                    document.getElementById('errorMessage').textContent = 'Error al obtener la información del evento.';
+                    console.error('Error:', error);
+                });
+        }
+
+        // Función para mostrar la información del evento
+        function displayEventData(data) {
+            document.getElementById('errorMessage').textContent = ''; // Limpiar mensajes de error
+            const eventDetails = document.getElementById('eventDetails');
+            const layoutDetails = document.getElementById('layoutDetails');
+
+            // Determinar si es un evento único o un abono
+            let eventType = '';
+            let extraDetails = '';
+            let templateToPrint = data.templateToPrint || 'No disponible';
+
+            if (data.type === 'EVENT_BUNDLE') {
+                eventType = 'Abono';
+                extraDetails = `
+                    <h3>Eventos incluidos:</h3>
+                    <ul>
+                        ${data.events.map(event => `<li><a href="http://127.0.0.1:5500/index.html?EventCode=${event}" target="_blank">${event}</a></li>`).join('')}
+                    </ul>
+                    <p><strong>Template para Abono Físico (templateToPrint):</strong> ${templateToPrint}</p>
+                `;
+            } else if (data.type === 'FOOTBALL') {
+                eventType = 'Partido';
+            } else {
+                eventType = 'Evento Desconocido';
+            }
+
+            // Determinar el estado del evento (Activo o Expirado)
+            const eventStatus = data.expired
+                ? '🔴 <span title="Expirado">Expirado</span>'
+                : '🟢 <span title="Activo">Activo</span>';
+
+            eventDetails.innerHTML = `
+                <div class="event-header">
+                    <h2>${data.name || 'Nombre del Evento no disponible'} </h2>
+                    <img src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
+                </div>
+                <p><strong>Código del evento:</strong> ${data.code || 'No disponible'}</p>
+                <p><strong>Tipo de evento:</strong> ${eventType}</p>
+                ${extraDetails}
+                <h3>Detalles del Evento</h3>
+                <p><strong>🎽 Equipo Local:</strong> ${data.homeTeam ? data.homeTeam.name : 'No disponible'}</p>
+                <p><strong>🆚 Rival:</strong> ${data.awayTeam ? data.awayTeam.name : 'No disponible'}</p>
+                <p><strong>🗓️ Fecha:</strong> ${data.date || 'No disponible'} ${eventStatus} </p>
+                <p><strong>🏟️ Estadio:</strong> ${data.venue ? data.venue.name : 'No disponible'}</p>
+                <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout ? data.layout.maxCapacityByFan : 'No disponible'}</p>
+                <p><strong>👥 Capacidad disponible:</strong> ${data.layout ? data.layout.availableCapacity : 'No disponible'}</p>
+                <p><strong>💵 Días máximos de reserva para pagos en efectivo:</strong> ${data.cashPaymentDueDays || 'No disponible'}</p>
+            `;
+
+            if (data.layout && data.layout.sections) {
+                layoutDetails.innerHTML = `<h2>Layout</h2>`;
+                data.layout.sections.forEach(section => {
+                    layoutDetails.innerHTML += `
+                        <button type="button" class="collapsible">
+                            <div>
+                                <p><strong>Section Code:</strong> ${section.code}</p>
+                                <p><strong>Section Name:</strong> ${section.name}</p>
+                            </div>
+                        </button>
+                        <div class="content">
+                            ${section.sections ? section.sections.map(subSection => `
+                                <button type="button" class="collapsible">
+                                    <div class="subsection-flex">
+                                        <div>
+                                            <p><strong>Subsection Code:</strong> ${subSection.code}</p>
+                                            <p><strong>Subsection Name:</strong> ${subSection.name}</p>
+                                        </div>
+                                        <div>
+                                            <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + subSection.price.currency : 'No disponible'}</p>
+                                            <p><strong>Disabled:</strong> ${subSection.disabled} - <strong>Exclusive:</strong> ${subSection.exclusive}</p>
+                                        </div>
+                                    </div>
+                                </button>
+                                <div class="content">
+                                    <pre>${JSON.stringify(subSection, null, 2)}</pre>
+                                </div>
+                            `).join('') : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            // Inicializar los botones de colapsar
+            const coll = document.getElementsByClassName("collapsible");
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    const content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+        }
+
+        // Si ya hay un EventCode en la URL, hacer la búsqueda automáticamente
+        if (getEventCodeFromURL()) {
+            fetchEventData();
+        }
+    </script>
+</body>
+
+</html>
