@@ -18,11 +18,50 @@
             align-items: center;
         }
 
+
+        .image-header {
+            border-radius: 30px;
+            box-shadow: 0 10px 14px 0px rgba(56, 56, 56, 0.605);
+            z-index: 1;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-header:hover {
+            border-radius: 30px;
+            box-shadow: 0 5px 3px 0px rgba(56, 56, 56, 0.605);
+            z-index: 1;
+        }
+
         /*
         .event-header h2 {
             flex-grow: 1;
         }
 */
+        .top-buttons {
+            display: flex;
+            flex-direction: row;
+            margin-top: -5px;
+            position: absolute;
+            gap: 5px;
+        }
+
+        .top-buttons button {
+
+            background-color: aliceblue;
+            border: 0px solid blue;
+            border-radius: 0px 0px 20px 20px;
+            margin-top: 0px;
+            box-shadow: 0 5px 10px 0px rgba(56, 56, 56, 0.605);
+            font-size: small;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .top-buttons button:hover {
+            background-color: rgb(215, 232, 246);
+            cursor: pointer;
+            box-shadow: 0 1px 3px 0px rgba(56, 56, 56, 0.605);
+        }
+
         .event-details-container {
             display: flex;
             flex-direction: row;
@@ -54,6 +93,7 @@
         .event-info {
             margin-top: 20px;
             padding: 20px;
+            padding-top: 0px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             border-radius: 15px;
@@ -265,6 +305,40 @@
         }
 
 
+        let eventCode; // Variable global para guardar el código del evento
+        let eventCountry;
+
+        function goToJSON() {
+            if (eventCode) {
+                const url = `https://edge.bitsports-prod.co/api/composite-service/events/${eventCode}`;
+                window.open(url, '_blank'); // Abre la URL en una nueva pestaña
+            } else {
+                alert('No se ha encontrado el código del evento');
+            }
+        }
+        function goToFanki() {
+            if (eventCode && eventCountry) { // Verificamos que tanto eventCode como country existan
+                let baseUrl;
+
+                // Seleccionamos la URL base dependiendo del país
+                if (eventCountry === 'MEX') {
+                    baseUrl = 'https://fanki.com.mx/en/checkout/stadium/';
+                } else if (eventCountry === 'COL') {
+                    baseUrl = 'https://fanki.co/en/checkout/stadium/';
+                } else {
+                    alert('País no soportado.');
+                    return; // Detenemos la ejecución si el país no es soportado
+                }
+
+                // Construimos la URL completa con el eventCode
+                const url = `${baseUrl}${eventCode}`;
+                window.open(url, '_blank'); // Abrimos la URL en una nueva pestaña
+            } else {
+                alert('No se ha encontrado el código del evento o el país.');
+            }
+        }
+
+
         function displayEventData(data) {
             document.getElementById('errorMessage').textContent = '';
 
@@ -290,8 +364,9 @@
 
             if (data.type === 'EVENT_BUNDLE') {
                 eventType = 'Abono';
+                const eventCount = data.events.length; // Contar el número de eventos
                 extraDetails = `
-                    <h3>Eventos incluidos:</h3>
+                    <h3>Eventos incluidos (${eventCount}):</h3>
                     <ul>
                         ${data.events.map(event => `<li><a href="https://kel-hendros.github.io/eventVisualizer?EventCode=${event}" target="_blank">${event}</a></li>`).join('')}
                     </ul>
@@ -302,6 +377,9 @@
             } else {
                 eventType = 'Evento Desconocido';
             }
+
+            eventCode = data.code;
+            eventCountry = data.country;
 
             // Objeto que asocia deportes con emojis
             const sportEmojis = {
@@ -350,10 +428,17 @@
                 ? '🟢 <span title="True">True</span>'
                 : '🔴 <span title="False">False</span>'
 
+
+
+
             eventDetails.innerHTML = `
+            <div class="top-buttons">
+                <button onclick="goToJSON()">🛠️ JSON</button>
+                <button onclick="goToFanki()">🖥️ Fanki</button>
+            </div>
             <div class="event-header">
                             <h2>${data.name || 'Nombre del Evento no disponible'} </h2>
-                            <img src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
+                            <img class="image-header" src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
                         </div>    
             <div class="event-details-container">
                        
@@ -387,6 +472,7 @@
                         <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout ? data.layout.maxCapacityByFan : 'No disponible'}</p>
                         <p><strong>👥 Capacidad disponible:</strong> ${data.layout ? data.layout.availableCapacity : 'No disponible'}</p>
                         <p><strong>💵 Días máximos de reserva para pagos en efectivo:</strong> ${data.cashPaymentDueDays || 'No disponible'}</p>
+
                         
                     </div >
                     <div class="event-details">
