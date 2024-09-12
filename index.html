@@ -11,16 +11,44 @@
             margin: 20px;
         }
 
+        .event-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        /*
+        .event-header h2 {
+            flex-grow: 1;
+        }
+*/
+        .event-details-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .event-details {
+            padding: 20px;
+            background-color: #f9f9f9;
+            /* width: 50%;
+            /* Ancho de cada columna al 50% */
+        }
+
+
         input,
         button {
             margin: 10px 0;
             padding: 10px;
             font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid black;
         }
 
         input {
-            width: 400px;
-            /* Aumentar el ancho del cuadro de búsqueda */
+            width: 300px;
         }
 
         .event-info {
@@ -29,56 +57,52 @@
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             border-radius: 15px;
-            /* Bordes redondeados */
         }
 
-        .layout-info {
-            margin-top: 20px;
-            padding: 20px;
+        .tab {
+            overflow: hidden;
             border: 1px solid #ccc;
             background-color: #f1f1f1;
-            border-radius: 15px;
-            /* Bordes redondeados */
+            margin-top: 20px;
+            border-radius: 15px 15px 0px 0px;
         }
 
-        .event-info h2,
-        .layout-info h2 {
-            margin-top: 0;
-        }
-
-        .event-info h3 {
-            margin-top: 10px;
-        }
-
-        .error {
-            color: red;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-        }
-
-        .event-header {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .event-header h2 {
-            flex-grow: 1;
-        }
-
-        /* Styles for collapsible sections */
-        .collapsible {
-            background-color: #777;
-            color: white;
-            cursor: pointer;
-            padding: 10px;
-            width: 100%;
+        .tab button {
+            background-color: inherit;
+            float: left;
             border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+
+        .collapsible {
+            background-color: #f7f7f7;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            padding-left: 10px;
+            padding-block: 5px;
+            width: 100%;
+            border: 10px solid;
             text-align: left;
             outline: none;
             font-size: 16px;
@@ -88,23 +112,38 @@
             justify-content: space-between;
         }
 
+        .collapsible.active {
+            border-radius: 20px 20px 0px 0px;
+            margin-bottom: 0px;
+
+        }
+
         .active,
         .collapsible:hover {
-            background-color: #555;
+            background-color: #dadada;
+        }
+
+        .collapsible p {
+            margin: 5px;
+            font-size: 14px;
         }
 
         .content {
+            width: 100%;
             padding: 0 10px;
             display: none;
             overflow: hidden;
             background-color: #f1f1f1;
+            border-radius: 0px 0px 20px 20px;
+            box-shadow: inset 0 5px 4px rgba(0, 0, 0, 0.1);
+            /* Sombra interna */
+            border: 1px solid #ccc;
         }
 
         .content p {
             margin: 0;
         }
 
-        /* Flex row style for the subsection buttons */
         .subsection-flex {
             display: flex;
             justify-content: space-between;
@@ -112,43 +151,102 @@
         }
 
         .subsection-flex p {
-            margin: 0;
+            margin: 5px;
+            font-size: 13px;
         }
 
         .subsection-flex div {
             flex-basis: 50%;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(0.5fr, 1fr));
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .image-grid div {
+            text-align: center;
+        }
+
+        .image-grid img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-grid p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .informationContainer {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 15px;
+
+        }
+
+        .informationContainer div {
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Buscar Información del Evento</h1>
+    <h1>Visualizador de Eventos</h1>
 
     <label for="eventCode">Código del Evento:</label>
     <input type="text" id="eventCode" placeholder="Ingresa el código del evento" />
     <button onclick="fetchEventData()">Buscar</button>
 
     <div id="eventDetails" class="event-info"></div>
-    <div id="layoutDetails" class="layout-info"></div>
+
+    <!-- Tabs for Layout and other sections -->
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Layout')">Layout</button>
+        <button class="tablinks" onclick="openTab(event, 'Imagenes')">Imágenes</button>
+        <button class="tablinks" onclick="openTab(event, 'Information')">Información</button>
+    </div>
+
+    <!-- Layout Tab content -->
+    <div id="Layout" class="tabcontent">
+        <div id="layoutDetails" class="layout-info"></div>
+    </div>
+
+    <!-- Imagenes Tab content -->
+    <div id="Imagenes" class="tabcontent">
+        <div id="eventImages"></div>
+    </div>
+
+    <!-- Informacion Tab Content -->
+    <div id="Information" class="tabcontent">
+        <div id="eventInformation"></div>
+    </div>
+
     <div id="errorMessage" class="error"></div>
 
     <script>
-        // Función para obtener el parámetro EventCode de la URL
         function getEventCodeFromURL() {
             const params = new URLSearchParams(window.location.search);
             return params.get('EventCode');
         }
 
-        // Asignar el valor del parámetro EventCode si existe
         const eventCodeFromURL = getEventCodeFromURL();
         const eventCodeInput = document.getElementById('eventCode');
         if (eventCodeFromURL) {
             eventCodeInput.value = eventCodeFromURL;
-            fetchEventData(); // Llamar automáticamente si ya viene el EventCode en la URL
+            fetchEventData();
         }
 
-        // Función para realizar la petición a la API
         function fetchEventData() {
             const eventCode = document.getElementById('eventCode').value;
             if (!eventCode) {
@@ -166,11 +264,24 @@
                 });
         }
 
-        // Función para mostrar la información del evento
+
         function displayEventData(data) {
-            document.getElementById('errorMessage').textContent = ''; // Limpiar mensajes de error
+            document.getElementById('errorMessage').textContent = '';
+
+            // Limpiar contenido anterior
+            document.getElementById('eventDetails').innerHTML = '';
+            document.getElementById('layoutDetails').innerHTML = '';
+            document.getElementById('eventImages').innerHTML = '';
+            document.getElementById('eventInformation').innerHTML = '';
+
+
+            // Mostrar nueva info
             const eventDetails = document.getElementById('eventDetails');
             const layoutDetails = document.getElementById('layoutDetails');
+            const eventImages = document.getElementById('eventImages');
+            const eventInformation = document.getElementById('eventInformation');
+
+
 
             // Determinar si es un evento único o un abono
             let eventType = '';
@@ -192,70 +303,260 @@
                 eventType = 'Evento Desconocido';
             }
 
-            // Determinar el estado del evento (Activo o Expirado)
-            const eventStatus = data.expired
-                ? '🔴 <span title="Expirado">Expirado</span>'
-                : '🟢 <span title="Activo">Activo</span>';
+            // Objeto que asocia deportes con emojis
+            const sportEmojis = {
+                FOOTBALL: '⚽',
+                BASKET: '🏀',
+                BASEBALL: '⚾',
+                PADDLE: '🏓',
+                TENNIS: '🎾',
+                RUGBY: '🏉'
+                // Puedes agregar más deportes y emojis aquí
+            };
 
-            eventDetails.innerHTML = `
-                <div class="event-header">
-                    <h2>${data.name || 'Nombre del Evento no disponible'} </h2>
-                    <img src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
-                </div>
-                <p><strong>Código del evento:</strong> ${data.code || 'No disponible'}</p>
-                <p><strong>Tipo de evento:</strong> ${eventType}</p>
-                ${extraDetails}
-                <h3>Detalles del Evento</h3>
-                <p><strong>🎽 Equipo Local:</strong> ${data.homeTeam ? data.homeTeam.name : 'No disponible'}</p>
-                <p><strong>🆚 Rival:</strong> ${data.awayTeam ? data.awayTeam.name : 'No disponible'}</p>
-                <p><strong>🗓️ Fecha:</strong> ${data.date || 'No disponible'} ${eventStatus} </p>
-                <p><strong>🏟️ Estadio:</strong> ${data.venue ? data.venue.name : 'No disponible'}</p>
-                <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout ? data.layout.maxCapacityByFan : 'No disponible'}</p>
-                <p><strong>👥 Capacidad disponible:</strong> ${data.layout ? data.layout.availableCapacity : 'No disponible'}</p>
-                <p><strong>💵 Días máximos de reserva para pagos en efectivo:</strong> ${data.cashPaymentDueDays || 'No disponible'}</p>
-            `;
-
-            if (data.layout && data.layout.sections) {
-                layoutDetails.innerHTML = `
-            <h2>Layout</h2>
-            <div style="text-align: center;">
-                <img src="${data.layout.image ? data.layout.image.large : ''}" alt="Imagen del Estadio" style="width: 40%;">
-            </div>
-        `;
-
-                data.layout.sections.forEach(section => {
-                    layoutDetails.innerHTML += `
-                <button type="button" class="collapsible" style="background-color:${section.color}">
-                    <div>
-                        <p><strong>Section Code:</strong> ${section.code}</p>
-                        <p><strong>Section Name:</strong> ${section.name}</p>
-                    </div>
-                </button>
-                <div class="content">
-                    ${section.sections ? section.sections.map(subSection => `
-                        <button type="button" class="collapsible" style="background-color:${subSection.color}">
-                            <div class="subsection-flex">
-                                <div>
-                                    <p><strong>Subsection Code:</strong> ${subSection.code}</p>
-                                    <p><strong>Subsection Name:</strong> ${subSection.name}</p>
-                                </div>
-                                <div>
-                                    <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + subSection.price.currency : 'No disponible'}</p>
-                                    <p><strong>Disabled:</strong> ${subSection.disabled} | <strong>Exclusive:</strong> ${subSection.exclusive}</p>
-                                </div>
-                            </div>
-                        </button>
-                        <div class="content">
-                            <pre>${JSON.stringify(subSection, null, 2)}</pre>
-                                    </div>
-                                `).join('') : ''}
-                            </div>
-                        `;
-                });
+            // Función para obtener el emoji correspondiente al deporte
+            function getSportWithEmoji(sport) {
+                return sportEmojis[sport] ? `${sportEmojis[sport]} ${sport}` : sport;
             }
 
+            // Ejemplo de cómo usarlo
+            const sport = data.sport || 'Desconocido';
+            const sportDisplay = getSportWithEmoji(sport);
 
-            // Inicializar los botones de colapsar
+            // Objeto que mapea los códigos de país a sus correspondientes banderas y nombres
+            const countryMap = {
+                MEX: '🇲🇽 Mexico',
+                COL: '🇨🇴 Colombia',
+                ARG: '🇦🇷 Argentina', // Puedes agregar más países aquí
+            };
+
+            // Función para obtener el país con la bandera
+            function getCountryDisplay(countryCode) {
+                return countryMap[countryCode] || countryCode; // Si no está en el mapeo, muestra el código tal cual
+            }
+
+            // Ejemplo de uso
+            const countryDisplay = getCountryDisplay(data.country);
+
+
+
+
+            // Determinar el estado del evento (Activo o Expirado)
+            const eventStatus = data.expired
+                ? '🔴 <span title="True">True</span>'
+                : '🟢 <span title="False">False</span>';
+            // Determinar si está habilitado o no el evento
+            const eventEnabled = data.enabled
+                ? '🟢 <span title="True">True</span>'
+                : '🔴 <span title="False">False</span>'
+
+            eventDetails.innerHTML = `
+            <div class="event-header">
+                            <h2>${data.name || 'Nombre del Evento no disponible'} </h2>
+                            <img src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
+                        </div>    
+            <div class="event-details-container">
+                       
+                    <div class="event-details">                  
+                        
+                        <p><strong>🌎 Pais:</strong> ${countryDisplay}</p>
+                        <p><strong>🏅 Deporte:</strong> ${sportDisplay}</p>
+                        <p><strong>🎽 Equipo Local:</strong><br> 
+                            <ul>
+                                <li><strong>Name: </strong>${data.homeTeam ? data.homeTeam.name : 'No disponible'} </li>
+                                <li><strong>Code: </strong>${data.homeTeam ? data.homeTeam.code : 'No disponible'} </li>
+                                <li><strong>Detail: </strong>${data.homeTeam ? data.homeTeam.detail : 'No disponible'}</li>
+                            </ul>
+                        </p>
+                        <p><strong>🆚 Rival:</strong><br>
+                            <ul>
+                                <li><strong>Name: </strong>${data.awayTeam ? data.awayTeam.name : 'No disponible'}</li>
+                                <li><strong>Code: </strong>${data.awayTeam ? data.awayTeam.code : 'No disponible'}</li>
+                                <li><strong>Detail: </strong>${data.awayTeam ? data.awayTeam.detail : 'No disponible'}</li>
+                            </ul>
+                        </p>
+                        <p><strong>🗓️ Fecha:</strong> ${data.date || 'No disponible'}</p>
+                        <p><strong>🏟️ Estadio:</strong> ${data.venue ? data.venue.name : 'No disponible'}</p>
+                        
+                    </div>
+                    <div class="event-details">
+                        <p><strong>🏷️ Código del evento:</strong> ${data.code || 'No disponible'}</p>
+                        <p><strong>🎫 Tipo de evento:</strong> ${eventType}</p>
+                        <p><strong>🚦 Enabled:</strong> ${eventEnabled}</p>
+                        <p><strong>♻️ Expired:</strong> ${eventStatus}</p>
+                        <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout ? data.layout.maxCapacityByFan : 'No disponible'}</p>
+                        <p><strong>👥 Capacidad disponible:</strong> ${data.layout ? data.layout.availableCapacity : 'No disponible'}</p>
+                        <p><strong>💵 Días máximos de reserva para pagos en efectivo:</strong> ${data.cashPaymentDueDays || 'No disponible'}</p>
+                        
+                    </div >
+                    <div class="event-details">
+                        ${extraDetails} 
+                    </div>
+                </div >
+                `;
+
+            // Display Layout details in its tab
+            layoutDetails.innerHTML = `
+                <div style = "text-align: center;">
+                    <img src="${data.layout.image ? data.layout.image.large : ''}" alt="Imagen del Estadio" style="width: 40%;">
+                    </div>
+            `;
+
+            data.layout.sections.forEach(section => {
+                layoutDetails.innerHTML += `
+    <button type="button" class="collapsible" style="border-color:${section.color};">
+        <div>
+            <p><strong>Section Code:</strong> ${section.code}</p>
+            <p><strong>Section Name:</strong> ${section.name}</p>
+        </div>
+    </button>
+    <div class="content">
+        ${section.sections && section.sections.length > 0 ?
+                        // Si hay subsecciones, mostrar botones de subsección y su JSON
+                        section.sections.map(subSection => `
+            <button type="button" class="collapsible" style="border: 3px solid ${subSection.color};">
+                <div class="subsection-flex">
+                    <div>
+                        <p><strong>Subsection Code:</strong> ${subSection.code}</p>
+                        <p><strong>Subsection Name:</strong> ${subSection.name}</p>
+                    </div>
+                    <div>
+                        <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + ' ' + subSection.price.currency : 'No disponible'}</p>
+                        <p><strong>Disabled:</strong> ${subSection.disabled ? '🚫 True' : 'False'} | <strong>Exclusive:</strong> ${subSection.exclusive ? '✴️ True' : 'False'}</p>
+                    </div>
+                </div>
+            </button>
+            <div class="content">
+                <pre>${JSON.stringify(subSection, null, 2)}</pre>
+            </div>
+        `).join('')
+                        :
+                        // Si no hay subsecciones, mostrar el JSON completo de la sección
+                        `
+        <pre>${JSON.stringify(section, null, 2)}</pre>
+        `}
+    </div>
+    `;
+            });
+
+
+            // Display Images in their tab      
+            eventImages.innerHTML = `
+    <div id="Imagenes2" class="tabcontent2">
+        <h3>Layout</h3>
+        <div class="image-grid">
+            <div>
+                <img src="${data.layout?.image?.small || ''}" alt="Layout Small">
+                <p>Small</p>
+            </div>
+            <div>
+                <img src="${data.layout?.image?.medium || ''}" alt="Layout Medium">
+                <p>Medium</p>
+            </div>
+            <div>
+                <img src="${data.layout?.image?.large || ''}" alt="Layout Large">
+                <p>Large</p>
+            </div>
+        </div>
+
+        <h3>Banner</h3>
+        <div class="image-grid">
+            <div>
+                <img src="${data.images?.banner?.small || ''}" alt="Banner Small">
+                <p>Small</p>
+            </div>
+            <div>
+                <img src="${data.images?.banner?.medium || ''}" alt="Banner Medium">
+                <p>Medium</p>
+            </div>
+            <div>
+                <img src="${data.images?.banner?.large || ''}" alt="Banner Large">
+                <p>Large</p>
+            </div>
+        </div>
+
+        <h3>Equipos</h3>
+        <h4>Equipo Local</h4>
+        <div class="image-grid">
+            <div>
+                <img src="${data.homeTeam?.image?.small || ''}" alt="Home Team Small">
+                <p>Small</p>
+            </div>
+            <div>
+                <img src="${data.homeTeam?.image?.medium || ''}" alt="Home Team Medium">
+                <p>Medium</p>
+            </div>
+            <div>
+                <img src="${data.homeTeam?.image?.large || ''}" alt="Home Team Large">
+                <p>Large</p>
+            </div>
+        </div>
+
+        <h4>Equipo Visitante</h4>
+        <div class="image-grid">
+            <div>
+                <img src="${data.awayTeam?.image?.small || ''}" alt="Away Team Small">
+                <p>Small</p>
+            </div>
+            <div>
+                <img src="${data.awayTeam?.image?.medium || ''}" alt="Away Team Medium">
+                <p>Medium</p>
+            </div>
+            <div>
+                <img src="${data.awayTeam?.image?.large || ''}" alt="Away Team Large">
+                <p>Large</p>
+            </div>
+        </div>
+
+        <h3>Background</h3>
+        <div class="image-grid">
+            <div>
+                <img src="${data.images?.background?.small || ''}" alt="Background Small">
+                <p>Small</p>
+            </div>
+            <div>
+                <img src="${data.images?.background?.medium || ''}" alt="Background Medium">
+                <p>Medium</p>
+            </div>
+            <div>
+                <img src="${data.images?.background?.large || ''}" alt="Background Large">
+                <p>Large</p>
+            </div>
+        </div>
+
+        <h3>Header</h3>
+        <div class="image-grid">
+            <div>
+                <img src="${data.images?.header?.small || ''}" alt="Header Small">
+                <p>Small</p>
+            </div>
+            <div>
+                <img src="${data.images?.header?.medium || ''}" alt="Header Medium">
+                <p>Medium</p>
+            </div>
+            <div>
+                <img src="${data.images?.header?.large || ''}" alt="Header Large">
+                <p>Large</p>
+            </div>
+        </div>
+    </div>
+`;
+
+
+            // Nueva pestaña para Información del Evento
+            eventInformation.innerHTML = `
+                <div class="informationContainer">
+                <div>
+                    <h3>ℹ️ Detalles del Evento</h3>
+                    ${data.detail} 
+                </div>
+                <div>
+                    <h3>📃 Politicas de Acceso</h3>
+                    ${data.accessPolicies} 
+                </div>
+            </div >
+             `;
+
             const coll = document.getElementsByClassName("collapsible");
             for (let i = 0; i < coll.length; i++) {
                 coll[i].addEventListener("click", function () {
@@ -270,11 +571,37 @@
             }
         }
 
-        // Si ya hay un EventCode en la URL, hacer la búsqueda automáticamente
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Ocultar todo el contenido de las pestañas
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";  // Asegúrate de ocultar correctamente las otras pestañas
+            }
+
+            // Eliminar la clase 'active' de todos los botones de pestañas
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Mostrar el contenido de la pestaña seleccionada
+            document.getElementById(tabName).style.display = "block";  // Asegúrate de mostrar la pestaña seleccionada correctamente
+            evt.currentTarget.className += " active";
+        }
+
+        // Cargar la pestaña por defecto al cargar la página
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelector('.tablinks').click();  // Abrir la pestaña por defecto
+        });
+
+        // If EventCode exists in URL, trigger data fetch
         if (getEventCodeFromURL()) {
             fetchEventData();
         }
     </script>
+
 </body>
 
 </html>
