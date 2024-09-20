@@ -6,77 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Información de Evento</title>
     <style>
+        /* Estilos Generales */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
 
-        .event-header {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-
-        .image-header {
-            border-radius: 30px;
-            box-shadow: 0 10px 14px 0px rgba(56, 56, 56, 0.605);
-            z-index: 1;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
-        .image-header:hover {
-            border-radius: 30px;
-            box-shadow: 0 5px 3px 0px rgba(56, 56, 56, 0.605);
-            z-index: 1;
-        }
-
-        /*
-        .event-header h2 {
-            flex-grow: 1;
-        }
-*/
-        .top-buttons {
-            display: flex;
-            flex-direction: row;
-            margin-top: -5px;
-            position: absolute;
-            gap: 5px;
-        }
-
-        .top-buttons button {
-
-            background-color: aliceblue;
-            border: 0px solid blue;
-            border-radius: 0px 0px 20px 20px;
-            margin-top: 0px;
-            box-shadow: 0 5px 10px 0px rgba(56, 56, 56, 0.605);
-            font-size: small;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .top-buttons button:hover {
-            background-color: rgb(215, 232, 246);
-            cursor: pointer;
-            box-shadow: 0 1px 3px 0px rgba(56, 56, 56, 0.605);
-        }
-
-        .event-details-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .event-details {
-            padding: 20px;
-            background-color: #f9f9f9;
-            /* width: 50%;
-            /* Ancho de cada columna al 50% */
-        }
-
-
+        /* Estilos para Inputs y Botones Generales */
         input,
         button {
             margin: 10px 0;
@@ -90,15 +37,82 @@
             width: 300px;
         }
 
+        /* Estilos Específicos para Botones en Top Buttons */
+        .top-buttons {
+            display: flex;
+            flex-direction: row;
+            margin-top: -25px;
+            position: absolute;
+            gap: 5px;
+        }
+
+        .top-buttons button {
+            background-color: aliceblue;
+            border: none;
+            /* Cambiado a 'none' para evitar conflictos con border: 1px solid black */
+            border-radius: 0px 0px 20px 20px;
+            margin-top: 0px;
+            box-shadow: 0 5px 10px 0px rgba(56, 56, 56, 0.605);
+            font-size: small;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .top-buttons button:hover {
+            background-color: rgb(215, 232, 246);
+            box-shadow: 0 1px 3px 0px rgba(56, 56, 56, 0.605);
+        }
+
+        /* Estilos para la Información del Evento */
         .event-info {
             margin-top: 20px;
             padding: 20px;
-            padding-top: 0px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             border-radius: 15px;
         }
 
+        /* Encabezado del Evento */
+        .event-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .image-header {
+            border-radius: 30px;
+            box-shadow: 0 10px 14px 0px rgba(56, 56, 56, 0.605);
+            z-index: 1;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .image-header:hover {
+            box-shadow: 0 5px 3px 0px rgba(56, 56, 56, 0.605);
+        }
+
+        /* Contenedor de Detalles del Evento */
+        .event-details-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            /* flex-wrap: wrap; */
+            gap: 20px;
+        }
+
+        .event-details {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            /* flex: 1 1 45%; */
+            /* box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1); */
+        }
+
+        /* Estilos para las Pestañas */
         .tab {
             overflow: hidden;
             border: 1px solid #ccc;
@@ -133,8 +147,39 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-top: none;
+            border-radius: 0px 0px 15px 15px;
+            background-color: #f9f9f9;
         }
 
+        .layoutContent {
+            display: flex;
+            flex-direction: row-reverse;
+            width: 100%;
+            gap: 15px;
+            align-items: start;
+
+        }
+
+        .layout-venue {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            flex: 0 0 40%;
+
+        }
+
+        .layout-venue img {
+            width: 100%;
+        }
+
+        .layout-SectionGroup {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+        }
+
+        /* Estilos para secciones colapsables */
         .collapsible {
             background-color: #f7f7f7;
             color: rgb(0, 0, 0);
@@ -150,15 +195,15 @@
             border-radius: 20px;
             display: flex;
             justify-content: space-between;
+            transition: background-color 0.3s ease;
         }
 
         .collapsible.active {
             border-radius: 20px 20px 0px 0px;
             margin-bottom: 0px;
-
+            background-color: #dadada;
         }
 
-        .active,
         .collapsible:hover {
             background-color: #dadada;
         }
@@ -169,14 +214,13 @@
         }
 
         .content {
-            width: 100%;
+            /* width: 100%; */
             padding: 0 10px;
             display: none;
             overflow: hidden;
             background-color: #f1f1f1;
             border-radius: 0px 0px 20px 20px;
             box-shadow: inset 0 5px 4px rgba(0, 0, 0, 0.1);
-            /* Sombra interna */
             border: 1px solid #ccc;
         }
 
@@ -199,36 +243,13 @@
             flex-basis: 50%;
         }
 
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(0.5fr, 1fr));
-            gap: 5px;
-            margin-top: 20px;
-        }
-
-        .image-grid div {
-            text-align: center;
-        }
-
-        .image-grid img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .image-grid p {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
+        /* Contenedor de Información */
         .informationContainer {
             display: flex;
             justify-content: space-between;
             width: 100%;
             gap: 15px;
-
+            flex-wrap: wrap;
         }
 
         .informationContainer div {
@@ -236,6 +257,80 @@
             border-radius: 20px;
             padding: 15px;
             box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+            flex: 1 1 45%;
+            background-color: #ffffff;
+        }
+
+        /* Nuevos Estilos para la Cuadrícula de Imágenes */
+        #Imagenes2 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .image-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .image-section h3 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .image-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .image-group img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-group img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 900px) {
+            #Imagenes2 {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .event-details {
+                flex: 1 1 100%;
+            }
+
+            .informationContainer div {
+                flex: 1 1 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #Imagenes2 {
+                grid-template-columns: 1fr;
+            }
+
+            .image-group img {
+                max-width: 100px;
+            }
+        }
+
+        /* Estilo para mensajes de error */
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
@@ -259,7 +354,10 @@
 
     <!-- Layout Tab content -->
     <div id="Layout" class="tabcontent">
-        <div id="layoutDetails" class="layout-info"></div>
+        <div id="layout-content" class="layoutContent">
+            <div id="layoutVenue" class="layout-venue"></div>
+            <div id="layoutSectionGroup" class="layout-SectionGroup"></div>
+        </div>
     </div>
 
     <!-- Imagenes Tab content -->
@@ -304,7 +402,6 @@
                 });
         }
 
-
         let eventCode; // Variable global para guardar el código del evento
         let eventCountry;
 
@@ -316,6 +413,16 @@
                 alert('No se ha encontrado el código del evento');
             }
         }
+        // Funcion para copiar en el portapapeles la URL del Visualidazor del Evento actual al usar el boton shareEvent()
+        function shareEvent() {
+            const eventUrl = `https://kel-hendros.github.io/eventVisualizer?EventCode=${eventCode}`;
+            navigator.clipboard.writeText(eventUrl).then(() => {
+                alert('URL copiada al portapapeles');
+            }).catch(err => {
+                console.error('Error al copiar la URL: ', err);
+            });
+        }
+
         function goToFanki() {
             if (eventCode && eventCountry) { // Verificamos que tanto eventCode como country existan
                 let baseUrl;
@@ -338,24 +445,22 @@
             }
         }
 
-
         function displayEventData(data) {
             document.getElementById('errorMessage').textContent = '';
 
             // Limpiar contenido anterior
             document.getElementById('eventDetails').innerHTML = '';
-            document.getElementById('layoutDetails').innerHTML = '';
+            document.getElementById('layoutVenue').innerHTML = '';
+            document.getElementById('layoutSectionGroup').innerHTML = '';
             document.getElementById('eventImages').innerHTML = '';
             document.getElementById('eventInformation').innerHTML = '';
 
-
             // Mostrar nueva info
             const eventDetails = document.getElementById('eventDetails');
-            const layoutDetails = document.getElementById('layoutDetails');
+            const layoutDetails = document.getElementById('layout-venue');
+            const layoutSectionGroup = document.getElementById('layoutSectionGroup');
             const eventImages = document.getElementById('eventImages');
             const eventInformation = document.getElementById('eventInformation');
-
-
 
             // Determinar si es un evento único o un abono
             let eventType = '';
@@ -416,9 +521,6 @@
             // Ejemplo de uso
             const countryDisplay = getCountryDisplay(data.country);
 
-
-
-
             // Determinar el estado del evento (Activo o Expirado)
             const eventStatus = data.expired
                 ? '🔴 <span title="True">True</span>'
@@ -426,25 +528,24 @@
             // Determinar si está habilitado o no el evento
             const eventEnabled = data.enabled
                 ? '🟢 <span title="True">True</span>'
-                : '🔴 <span title="False">False</span>'
+                : '🔴 <span title="False">False</span>';
 
 
 
 
             eventDetails.innerHTML = `
-            <div class="top-buttons">
-                <button onclick="goToJSON()">🛠️ JSON</button>
-                <button onclick="goToFanki()">🖥️ Fanki</button>
-            </div>
-            <div class="event-header">
-                            <h2>${data.name || 'Nombre del Evento no disponible'} </h2>
-                            <img class="image-header" src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
-                        </div>    
-            <div class="event-details-container">
-                       
+                <div class="top-buttons">
+                    <button onclick="goToJSON()">🛠️ JSON</button>
+                    <button onclick="goToFanki()">🖥️ Fanki</button>
+                    <button onclick="shareEvent()">🔗 Compartir</button>
+                </div>
+                <div class="event-header">
+                    <h2>${data.name || 'Nombre del Evento no disponible'} </h2>
+                    <img class="image-header" src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
+                </div>    
+                <div class="event-details-container">
                     <div class="event-details">                  
-                        
-                        <p><strong>🌎 Pais:</strong> ${countryDisplay}</p>
+                        <p><strong>🌎 País:</strong> ${countryDisplay}</p>
                         <p><strong>🏅 Deporte:</strong> ${sportDisplay}</p>
                         <p><strong>🎽 Equipo Local:</strong><br> 
                             <ul>
@@ -462,7 +563,6 @@
                         </p>
                         <p><strong>🗓️ Fecha:</strong> ${data.date || 'No disponible'}</p>
                         <p><strong>🏟️ Estadio:</strong> ${data.venue ? data.venue.name : 'No disponible'}</p>
-                        
                     </div>
                     <div class="event-details">
                         <p><strong>🏷️ Código del evento:</strong> ${data.code || 'No disponible'}</p>
@@ -472,157 +572,193 @@
                         <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout ? data.layout.maxCapacityByFan : 'No disponible'}</p>
                         <p><strong>👥 Capacidad disponible:</strong> ${data.layout ? data.layout.availableCapacity : 'No disponible'}</p>
                         <p><strong>💵 Días máximos de reserva para pagos en efectivo:</strong> ${data.cashPaymentDueDays || 'No disponible'}</p>
-
-                        
-                    </div >
+                        <p><strong>📝 Politicas de Privacidad:</strong> ${data.termsAndConditionsUrl ? `<a href="${data.termsAndConditionsUrl}" target="_blank">Políticas</a>` : 'No disponible'}</p>
+                    </div>
                     <div class="event-details">
                         ${extraDetails} 
                     </div>
-                </div >
-                `;
+                </div>
+            `;
 
             // Display Layout details in its tab
-            layoutDetails.innerHTML = `
-                <div style = "text-align: center;">
-                    <img src="${data.layout.image ? data.layout.image.large : ''}" alt="Imagen del Estadio" style="width: 40%;">
-                    </div>
+            layoutVenue.innerHTML = `
+                <div style="text-align: center;">
+                    <img src="${data.layout.image ? data.layout.image.large : ''}" alt="Imagen del Estadio">
+                </div>
             `;
 
             data.layout.sections.forEach(section => {
-                layoutDetails.innerHTML += `
-    <button type="button" class="collapsible" style="border-color:${section.color};">
-        <div>
-            <p><strong>Section Code:</strong> ${section.code}</p>
-            <p><strong>Section Name:</strong> ${section.name}</p>
-        </div>
-    </button>
-    <div class="content">
-        ${section.sections && section.sections.length > 0 ?
+                layoutSectionGroup.innerHTML += `
+                    <button type="button" class="collapsible" style="border-color:${section.color};">
+                        <div>
+                            <p><strong>Section Code:</strong> ${section.code}</p>
+                            <p><strong>Section Name:</strong> ${section.name}</p>
+                        </div>
+                        <div>
+                            <p><strong>Precio:</strong> ${section.price ? section.price.value + ' ' + section.price.currency : 'No disponible'}</p>
+                            <p><strong>Disabled:</strong> ${section.disabled ? '🚫 True' : 'False'} | <strong>Exclusive:</strong> ${section.exclusive ? '✴️ True' : 'False'}</p>
+                        </div>
+                    </button>
+                    <div class="content">
+                        ${section.sections && section.sections.length > 0 ?
                         // Si hay subsecciones, mostrar botones de subsección y su JSON
                         section.sections.map(subSection => `
-            <button type="button" class="collapsible" style="border: 3px solid ${subSection.color};">
-                <div class="subsection-flex">
-                    <div>
-                        <p><strong>Subsection Code:</strong> ${subSection.code}</p>
-                        <p><strong>Subsection Name:</strong> ${subSection.name}</p>
-                    </div>
-                    <div>
-                        <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + ' ' + subSection.price.currency : 'No disponible'}</p>
-                        <p><strong>Disabled:</strong> ${subSection.disabled ? '🚫 True' : 'False'} | <strong>Exclusive:</strong> ${subSection.exclusive ? '✴️ True' : 'False'}</p>
-                    </div>
-                </div>
-            </button>
-            <div class="content">
-                <pre>${JSON.stringify(subSection, null, 2)}</pre>
-            </div>
-        `).join('')
+                                <button type="button" class="collapsible" style="border: 3px solid ${subSection.color};">
+                                    <div class="subsection-flex">
+                                        <div>
+                                            <p><strong>Subsection Code:</strong> ${subSection.code}</p>
+                                            <p><strong>Subsection Name:</strong> ${subSection.name}</p>
+                                        </div>
+                                        <div>
+                                            <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + ' ' + subSection.price.currency : 'No disponible'}</p>
+                                            <p><strong>Disabled:</strong> ${subSection.disabled ? '🚫 True' : 'False'} | <strong>Exclusive:</strong> ${subSection.exclusive ? '✴️ True' : 'False'}</p>
+                                        </div>
+                                    </div>
+                                </button>
+                                <div class="content">
+                                    <pre>${JSON.stringify(subSection, null, 2)}</pre>
+                                </div>
+                            `).join('')
                         :
                         // Si no hay subsecciones, mostrar el JSON completo de la sección
                         `
-        <pre>${JSON.stringify(section, null, 2)}</pre>
-        `}
-    </div>
-    `;
+                                <pre>${JSON.stringify(section, null, 2)}</pre>
+                            `}
+                    </div>
+                `;
             });
-
 
             // Display Images in their tab      
             eventImages.innerHTML = `
     <div id="Imagenes2" class="tabcontent2">
-        <h3>Layout</h3>
-        <div class="image-grid">
-            <div>
-                <img src="${data.layout?.image?.small || ''}" alt="Layout Small">
-                <p>Small</p>
-            </div>
-            <div>
-                <img src="${data.layout?.image?.medium || ''}" alt="Layout Medium">
-                <p>Medium</p>
-            </div>
-            <div>
-                <img src="${data.layout?.image?.large || ''}" alt="Layout Large">
-                <p>Large</p>
-            </div>
-        </div>
-
-        <h3>Banner</h3>
-        <div class="image-grid">
-            <div>
-                <img src="${data.images?.banner?.small || ''}" alt="Banner Small">
-                <p>Small</p>
-            </div>
-            <div>
-                <img src="${data.images?.banner?.medium || ''}" alt="Banner Medium">
-                <p>Medium</p>
-            </div>
-            <div>
-                <img src="${data.images?.banner?.large || ''}" alt="Banner Large">
-                <p>Large</p>
+        <!-- Ticket Frame -->
+        <div class="image-section">
+            <h3>Ticket Frame</h3>
+            <div class="image-group">
+                Small
+                <a href="${data.ticketFrame?.small || '#'}" target="_blank">
+                    <img src="${data.ticketFrame?.small || ''}" alt="Ticket Frame Small" loading="lazy">
+                </a>
+                Medium
+                <a href="${data.ticketFrame?.medium || '#'}" target="_blank">
+                    <img src="${data.ticketFrame?.medium || ''}" alt="Ticket Frame Medium" loading="lazy">
+                </a>
+                Large
+                <a href="${data.ticketFrame?.large || '#'}" target="_blank">
+                    <img src="${data.ticketFrame?.large || ''}" alt="Ticket Frame Large" loading="lazy">
+                </a>
             </div>
         </div>
 
-        <h3>Equipos</h3>
-        <h4>Equipo Local</h4>
-        <div class="image-grid">
-            <div>
-                <img src="${data.homeTeam?.image?.small || ''}" alt="Home Team Small">
-                <p>Small</p>
-            </div>
-            <div>
-                <img src="${data.homeTeam?.image?.medium || ''}" alt="Home Team Medium">
-                <p>Medium</p>
-            </div>
-            <div>
-                <img src="${data.homeTeam?.image?.large || ''}" alt="Home Team Large">
-                <p>Large</p>
-            </div>
-        </div>
-
-        <h4>Equipo Visitante</h4>
-        <div class="image-grid">
-            <div>
-                <img src="${data.awayTeam?.image?.small || ''}" alt="Away Team Small">
-                <p>Small</p>
-            </div>
-            <div>
-                <img src="${data.awayTeam?.image?.medium || ''}" alt="Away Team Medium">
-                <p>Medium</p>
-            </div>
-            <div>
-                <img src="${data.awayTeam?.image?.large || ''}" alt="Away Team Large">
-                <p>Large</p>
+        <!-- Equipo Local -->
+        <div class="image-section">
+            <h3>Equipo Local</h3>
+            <div class="image-group">
+                Small
+                <a href="${data.homeTeam?.image?.small || '#'}" target="_blank">
+                    <img src="${data.homeTeam?.image?.small || ''}" alt="Home Team Small" loading="lazy">
+                </a>
+                Medium
+                <a href="${data.homeTeam?.image?.medium || '#'}" target="_blank">
+                    <img src="${data.homeTeam?.image?.medium || ''}" alt="Home Team Medium" loading="lazy">
+                </a>
+                Large
+                <a href="${data.homeTeam?.image?.large || '#'}" target="_blank">
+                    <img src="${data.homeTeam?.image?.large || ''}" alt="Home Team Large" loading="lazy">
+                </a>
             </div>
         </div>
 
-        <h3>Background</h3>
-        <div class="image-grid">
-            <div>
-                <img src="${data.images?.background?.small || ''}" alt="Background Small">
-                <p>Small</p>
-            </div>
-            <div>
-                <img src="${data.images?.background?.medium || ''}" alt="Background Medium">
-                <p>Medium</p>
-            </div>
-            <div>
-                <img src="${data.images?.background?.large || ''}" alt="Background Large">
-                <p>Large</p>
+        <!-- Equipo Rival -->
+        <div class="image-section">
+            <h3>Equipo Rival</h3>
+            <div class="image-group">
+                Small
+                <a href="${data.awayTeam?.image?.small || '#'}" target="_blank">
+                    <img src="${data.awayTeam?.image?.small || ''}" alt="Away Team Small" loading="lazy">
+                </a>
+                Medium
+                <a href="${data.awayTeam?.image?.medium || '#'}" target="_blank">
+                    <img src="${data.awayTeam?.image?.medium || ''}" alt="Away Team Medium" loading="lazy">
+                </a>
+                Large
+                <a href="${data.awayTeam?.image?.large || '#'}" target="_blank">
+                    <img src="${data.awayTeam?.image?.large || ''}" alt="Away Team Large" loading="lazy">
+                </a>
             </div>
         </div>
 
-        <h3>Header</h3>
-        <div class="image-grid">
-            <div>
-                <img src="${data.images?.header?.small || ''}" alt="Header Small">
-                <p>Small</p>
+        <!-- Background -->
+        <div class="image-section">
+            <h3>Background</h3>
+            <div class="image-group">
+                Small
+                <a href="${data.images?.background?.small || '#'}" target="_blank">
+                    <img src="${data.images?.background?.small || ''}" alt="Background Small" loading="lazy">
+                </a>
+                Medium
+                <a href="${data.images?.background?.medium || '#'}" target="_blank">
+                    <img src="${data.images?.background?.medium || ''}" alt="Background Medium" loading="lazy">
+                </a>
+                Large
+                <a href="${data.images?.background?.large || '#'}" target="_blank">
+                    <img src="${data.images?.background?.large || ''}" alt="Background Large" loading="lazy">
+                </a>
             </div>
-            <div>
-                <img src="${data.images?.header?.medium || ''}" alt="Header Medium">
-                <p>Medium</p>
+        </div>
+
+        <!-- Header -->
+        <div class="image-section">
+            <h3>Header</h3>
+            <div class="image-group">
+                Small
+                <a href="${data.images?.header?.small || '#'}" target="_blank">
+                    <img src="${data.images?.header?.small || ''}" alt="Header Small" loading="lazy">
+                </a>
+                Medium
+                <a href="${data.images?.header?.medium || '#'}" target="_blank">
+                    <img src="${data.images?.header?.medium || ''}" alt="Header Medium" loading="lazy">
+                </a>
+                Large
+                <a href="${data.images?.header?.large || '#'}" target="_blank">
+                    <img src="${data.images?.header?.large || ''}" alt="Header Large" loading="lazy">
+                </a>
             </div>
-            <div>
-                <img src="${data.images?.header?.large || ''}" alt="Header Large">
-                <p>Large</p>
+        </div>
+        <!-- Sponsor Banner -->
+        <div class="image-section">
+            <h3>Sponsor Banner</h3>
+            <div class="image-group">
+                Small
+                <a href="${data.sponsorBanner?.small || '#'}" target="_blank">
+                    <img src="${data.sponsorBanner?.small || ''}" alt="Banner Small" loading="lazy">
+                </a>
+                Medium
+                <a href="${data.sponsorBanner?.medium || '#'}" target="_blank">
+                    <img src="${data.sponsorBanner?.medium || ''}" alt="Banner Medium" loading="lazy">
+                </a>
+                Large
+                <a href="${data.sponsorBanner?.large || '#'}" target="_blank">
+                    <img src="${data.sponsorBanner?.large || ''}" alt="Banner Large" loading="lazy">
+                </a>
+            </div>
+        </div>
+        <!-- Banner -->
+        <div class="image-section">
+            <h3>Banner</h3>
+            <div class="image-group">
+                Small
+                <a href="${data.images?.banner?.small || '#'}" target="_blank">
+                    <img src="${data.images?.banner?.small || ''}" alt="Banner Small" loading="lazy">
+                </a>
+                Medium
+                <a href="${data.images?.banner?.medium || '#'}" target="_blank">
+                    <img src="${data.images?.banner?.medium || ''}" alt="Banner Medium" loading="lazy">
+                </a>
+                Large
+                <a href="${data.images?.banner?.large || '#'}" target="_blank">
+                    <img src="${data.images?.banner?.large || ''}" alt="Banner Large" loading="lazy">
+                </a>
             </div>
         </div>
     </div>
@@ -632,17 +768,18 @@
             // Nueva pestaña para Información del Evento
             eventInformation.innerHTML = `
                 <div class="informationContainer">
-                <div>
-                    <h3>ℹ️ Detalles del Evento</h3>
-                    ${data.detail} 
+                    <div>
+                        <h3>ℹ️ Detalles del Evento</h3>
+                        ${data.detail} 
+                    </div>
+                    <div>
+                        <h3>📃 Políticas de Acceso</h3>
+                        ${data.accessPolicies} 
+                    </div>
                 </div>
-                <div>
-                    <h3>📃 Politicas de Acceso</h3>
-                    ${data.accessPolicies} 
-                </div>
-            </div >
-             `;
+            `;
 
+            // Agregar funcionalidad a los elementos colapsables
             const coll = document.getElementsByClassName("collapsible");
             for (let i = 0; i < coll.length; i++) {
                 coll[i].addEventListener("click", function () {
