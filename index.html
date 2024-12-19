@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Información de Evento</title>
     <style>
+        /* IMPORT FONT */
+        @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
         /* Estilos Generales */
         *,
         *:after,
@@ -14,14 +17,23 @@
             -moz-box-sizing: border-box;
             -ms-box-sizing: border-box;
             box-sizing: border-box;
+            font-family: "Lato", sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
+
+            font-weight: 400;
+            font-style: normal;
+
             margin: 20px;
             background: linear-gradient(to right bottom, #79c5fb 50%, rgba(5, 90, 132, 0.94) 100%);
             color: #000;
             min-height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0px;
         }
 
         h1 {
@@ -35,6 +47,18 @@
             font-weight: bold;
         }
 
+        .title {
+            display: flex;
+            width: 100%;
+            align-items: baseline;
+
+        }
+
+        .column {
+            flex: 1;
+            padding: 10px;
+        }
+
         /* Estilos para Inputs y Botones Generales */
         input,
         button {
@@ -46,7 +70,7 @@
         }
 
         input {
-            width: 300px;
+            flex-grow: 1;
         }
 
         /* Estilos Específicos para Botones en Top Buttons */
@@ -95,7 +119,7 @@
             outline: none;
             text-align: center;
             text-decoration: none;
-            font-family: inherit;
+            /* font-family: inherit; */
             font-weight: 300;
             letter-spacing: 1px;
             vertical-align: middle;
@@ -118,7 +142,7 @@
 
         /* Estilos para la Información del Evento */
         .event-info {
-            margin-top: 20px;
+            margin-top: 10px;
             padding: 20px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
@@ -486,11 +510,19 @@
 
 <body>
 
-    <h1>Visualizador de Eventos</h1>
-
-    <div class="buscador">
-        <input type="text" id="eventCode" placeholder="Ingresa el código del evento" />
-        <button onclick="fetchEventData()">Buscar</button>
+    <div class="title">
+        <div class="column">
+            <div class="buscador">
+                <input type="text" id="eventCode" placeholder="Ingresa el código del evento" />
+                <button onclick="fetchEventData()">Buscar</button>
+            </div>
+        </div>
+        <div class="column">
+            <h2>Visualizador de Eventos</h2>
+        </div>
+        <div class="column">
+            <!-- Columna derecha vacía -->
+        </div>
     </div>
 
     <div id="eventDetails" class="event-info"></div>
@@ -625,7 +657,7 @@
             // Determinar si es un evento único o un abono
             let eventType = '';
             let extraDetails = '';
-            let templateToPrint = data.templateToPrint || 'No disponible';
+            let templateToPrint = data.layout.templateToPrint || 'No disponible';
 
             if (data.type === 'EVENT_BUNDLE') {
                 eventType = 'Abono';
@@ -694,6 +726,10 @@
             const eventEnabled = data.enabled
                 ? '🟢 <span title="True">True</span>'
                 : '🔴 <span title="False">False</span>';
+            // Determinar si el evento está visible o no 
+            const eventShowInCatalog = data.showInCatalog
+                ? '🟢 <span title="True">True</span>'
+                : '🔴 <span title="False">False</span>';
 
 
 
@@ -706,7 +742,7 @@
                     <button onclick="goalAssist()">👟 Goal Assist</button>
                 </div>
                 <div class="event-header">
-                    <h2>${data.name || 'Nombre del Evento no disponible'} </h2>
+                    <h1>${data.name || 'Nombre del Evento no disponible'} </h1>
 
                     <div class="contaienr">
 	                    <div class="tilt-box-wrap">
@@ -746,7 +782,9 @@
                     </div>
                     <div class="event-details">
                         <p><strong>🏷️ Código del evento:</strong> ${data.code || 'No disponible'}</p>
+                        <p><strong>👨🏻‍💻 Coordinador:</strong> ${data.coordinator || 'No disponible'}</p>
                         <p><strong>🎫 Tipo de evento:</strong> ${eventType}</p>
+                        <p><strong>🫥 Mostrar en el catálogo:</strong> ${eventShowInCatalog}</p>
                         <p><strong>🚦 Enabled:</strong> ${eventEnabled}</p>
                         <p><strong>♻️ Expired:</strong> ${eventStatus}</p>
                         <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout ? data.layout.maxCapacityByFan : 'No disponible'}</p>
