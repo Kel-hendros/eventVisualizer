@@ -496,10 +496,148 @@
             margin-top: 10px;
             text-align: center;
         }
+
+        /* Estilos para tarjetas de Eventos */
+        /* Contenedor principal que organiza los países */
+        .event-cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Cada sección de un país */
+        .country-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Título de cada país */
+        .country-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Contenedor de tarjetas de un país */
+        .event-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+
+        /* Estilos base de la tarjeta */
+        .event-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 250px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Efecto al hacer hover */
+        .event-card:hover {
+            transform: scale(1.05);
+            /* Agrandar tarjeta */
+            box-shadow: 0 3px 2px rgba(0, 0, 0, 0.1);
+            /* Reducir sombra */
+        }
+
+        .event-card img {
+            width: 100%;
+            object-fit: scale-down;
+        }
+
+        .event-card .card-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            height: 100%;
+            padding: 10px;
+        }
+
+        .event-card .card-content h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .event-card .card-content p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .event-card button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4682B4;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .event-card button:hover {
+            background-color: #356799;
+        }
+
+        /* Estilo base para las píldoras */
+        .pill {
+            position: absolute;
+            top: 55px;
+            right: 5px;
+            padding: 3px 5px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
+
+            border: 3px solid #ccc;
+            color: white;
+            text-transform: capitalize;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Colores específicos */
+        .pill-abono {
+            background-color: #158730;
+            border-color: #8afaa3;
+            /* Verde */
+        }
+
+        .pill-partido {
+            background-color: #007bff;
+            border-color: #7cb9f9;
+            /* Azul */
+        }
+
+        .pill-inscripcion {
+            background-color: #ffc107;
+            border-color: #ffe493;
+            /* Amarillo */
+        }
+
+        /* Estilo por defecto */
+        .pill-default {
+            background-color: #6c757d;
+            border-color: #c0c9d0;
+            /* Gris */
+        }
     </style>
 </head>
 
 <body>
+
     <div class="title">
         <div class="column">
             <div class="buscador">
@@ -585,6 +723,19 @@
         let eventCode; // Variable global para guardar el código del evento
         let eventCountry;
 
+        // Función para volver a la lista de eventos
+        function backToEventList() {
+            // Limpiar todo
+            document.getElementById("layoutVenue").innerHTML = "";
+            document.getElementById("layoutSectionGroup").innerHTML = "";
+            document.getElementById("eventImages").innerHTML = "";
+            document.getElementById("eventInformation").innerHTML = "";
+
+            // Volver a cargar la lista de eventos
+            fetchAndDisplayEvents();
+        }
+
+
         function goToJSON() {
             if (eventCode) {
                 const url = `https://edge.bitsports-prod.co/api/composite-service/events/${eventCode}`;
@@ -657,11 +808,13 @@
 
             // Determinar si es un evento único o un abono
             let eventType = "";
+            let pillClass = 'pill-default';
             let extraDetails = "";
             let templateToPrint = data.layout.templateToPrint || "No disponible";
 
             if (data.type === "EVENT_BUNDLE") {
                 eventType = "Abono";
+                pillClass = 'pill-abono';
                 const eventCount = data.events.length; // Contar el número de eventos
                 extraDetails = `
                 </div>
@@ -681,9 +834,11 @@
             } else if (data.type === "FOOTBALL") {
                 eventType = "Partido";
                 extraDetails = "";
+                pillClass = 'pill-partido';
             } else {
                 eventType = "Evento Desconocido";
                 extraDetails = "";
+
             }
 
             eventCode = data.code;
@@ -739,6 +894,7 @@
 
             eventDetails.innerHTML = `
                 <div class="top-buttons">
+                    <button onclick="backToEventList()">🔙 Ver Eventos</button>
                     <button onclick="goToJSON()">🛠️ JSON</button>
                     <button onclick="goToFanki()">🖥️ Fanki</button>
                     <button onclick="shareEvent()">🔗 Compartir</button>
@@ -1235,7 +1391,108 @@
                 }
             });
         });
+
+        // Listado de Eventos Activos
+
+        const eventsApiUrl = "https://fanki.com.mx/api/events/categorized?country=MEX";
+
+        // Obtener eventos al cargar la página
+        async function fetchAndDisplayEvents() {
+            const eventDetailsContainer = document.getElementById("eventDetails");
+            eventDetailsContainer.innerHTML = "<h2>Cargando eventos...</h2>";
+
+            const apiUrls = [
+                { country: "Mexico", url: "https://fanki.com.mx/api/events/categorized?country=MEX" },
+                { country: "Colombia", url: "https://fanki.com.mx/api/events/categorized?country=COL" }
+            ];
+
+            try {
+                // Obtener los datos de ambas APIs
+                const fetchPromises = apiUrls.map(api => fetch(api.url).then(response => response.json()));
+                const results = await Promise.all(fetchPromises);
+
+                // Procesar los resultados y agrupar por país
+                const eventsByCountry = {};
+                apiUrls.forEach((api, index) => {
+                    eventsByCountry[api.country] = results[index].flatMap(category => category.events);
+                });
+
+                // Mostrar los eventos en la interfaz
+                eventDetailsContainer.innerHTML = "";
+                const mainContainer = document.createElement("div");
+                mainContainer.className = "event-cards-container";
+
+                Object.entries(eventsByCountry).forEach(([country, events]) => {
+                    const countrySection = document.createElement("div");
+                    countrySection.className = "country-section";
+
+                    // Título del país
+                    const countryTitle = document.createElement("div");
+                    countryTitle.className = "country-title";
+                    countryTitle.textContent = `Eventos en ${country}`;
+                    countrySection.appendChild(countryTitle);
+
+                    // Contenedor de tarjetas de eventos
+                    const eventCards = document.createElement("div");
+                    eventCards.className = "event-cards";
+                    events.forEach(event => {
+
+                        if (event.type === "EVENT_BUNDLE") {
+                            eventType = "Abono";
+                            pillClass = 'pill-abono';
+                        } else if (event.type === "FOOTBALL") {
+                            eventType = "Partido";
+                            pillClass = 'pill-partido';
+                        } else if (event.type === "INSCRIPTION") {
+                            eventType = "Inscripción";
+                            pillClass = 'pill-inscripcion';
+                        } else {
+                            eventType = "Desconocido";
+                        };
+                        const card = document.createElement("div");
+                        card.className = "event-card";
+                        card.innerHTML = `
+                        <span class="pill ${pillClass}">${eventType}</span>
+                    <img src="${event.images.background.small}" alt="${event.name}">
+                    
+                    <div class="card-content">
+                        <h4>${event.name}</h4>
+                        <p><strong>Fecha:</strong> ${new Date(event.date).toLocaleDateString()}</p>
+                        <p><strong>Equipo:</strong> ${event.homeTeam.name}<p>
+                        
+                        <button onclick="fetchEventDetails('${event.code}')">Ver Detalles</button>
+                    </div>
+                `;
+                        eventCards.appendChild(card);
+                    });
+
+                    countrySection.appendChild(eventCards);
+                    mainContainer.appendChild(countrySection);
+                });
+
+                eventDetailsContainer.appendChild(mainContainer);
+            } catch (error) {
+                console.error("Error al obtener los eventos:", error);
+                eventDetailsContainer.innerHTML = `<p>Error al cargar los eventos. Por favor, inténtalo nuevamente más tarde.</p>`;
+            }
+        }
+
+        // Función para obtener detalles de un evento por código
+        async function fetchEventDetails(eventCode) {
+            const inputField = document.getElementById("eventCode");
+            inputField.value = eventCode; // Asigna el código al campo de entrada
+
+            // Llama a la función existente para obtener los detalles
+            fetchEventData();
+        }
+
+        // Llamar al servicio de eventos al cargar la página
+        document.addEventListener("DOMContentLoaded", fetchAndDisplayEvents);
+
+
+
     </script>
+
 </body>
 
 </html>
