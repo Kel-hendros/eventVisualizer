@@ -2,12 +2,12 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Información de Evento</title>
     <style>
         /* IMPORT FONT */
-        @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+        @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
         /* Estilos Generales */
         *,
@@ -21,12 +21,13 @@
         }
 
         body {
-
             font-weight: 400;
             font-style: normal;
 
             margin: 20px;
-            background: linear-gradient(to right bottom, #79c5fb 50%, rgba(5, 90, 132, 0.94) 100%);
+            background: linear-gradient(to right bottom,
+                    #79c5fb 50%,
+                    rgba(5, 90, 132, 0.94) 100%);
             color: #000;
             min-height: 100vh;
         }
@@ -51,7 +52,6 @@
             display: flex;
             width: 100%;
             align-items: baseline;
-
         }
 
         .column {
@@ -109,7 +109,6 @@
             column-gap: 3px;
             margin: 0px;
             flex-wrap: wrap;
-
         }
 
         .buscador button,
@@ -130,14 +129,14 @@
             border-radius: 3px;
             font-size: 0.8125em;
             padding: 0.4125em 1.25em;
-            color: #4682B4;
-            border-color: #4682B4;
+            color: #4682b4;
+            border-color: #4682b4;
         }
 
         .buscador button:hover {
-            background: #4682B4;
+            background: #4682b4;
             color: #fff;
-            border-color: #4682B4;
+            border-color: #4682b4;
         }
 
         /* Estilos para la Información del Evento */
@@ -159,14 +158,11 @@
             margin-top: 20px;
         }
 
-
-
         /* Movimiento de Imagen */
         .tilt-box-wrap {
             position: relative;
             transition: all 0.6s ease-out;
             perspective: 1000px;
-
         }
 
         .tilt-box-wrap:hover {
@@ -229,7 +225,7 @@
         }
 
         .t_over:nth-child(2):hover~.tilt-box {
-            transform: rotateX(8deg) rotateY(8deg)
+            transform: rotateX(8deg) rotateY(8deg);
         }
 
         .t_over:nth-child(3):hover~.tilt-box {
@@ -237,10 +233,8 @@
         }
 
         .t_over:nth-child(4):hover~.tilt-box {
-            transform: rotateX(-8deg) rotateY(8deg)
+            transform: rotateX(-8deg) rotateY(8deg);
         }
-
-
 
         /* Contenedor de Detalles del Evento */
         .event-details-container {
@@ -312,7 +306,6 @@
             width: 100%;
             gap: 15px;
             align-items: start;
-
         }
 
         .layout-venue {
@@ -320,7 +313,6 @@
             align-items: center;
             width: 100%;
             flex: 0 0 40%;
-
         }
 
         .layout-venue img {
@@ -381,7 +373,6 @@
             border-bottom: 10px solid;
             border-left: 10px solid;
             border-right: 10px solid;
-
         }
 
         .sub-collapsible-content {
@@ -509,7 +500,6 @@
 </head>
 
 <body>
-
     <div class="title">
         <div class="column">
             <div class="buscador">
@@ -529,9 +519,15 @@
 
     <!-- Tabs for Layout and other sections -->
     <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'Layout')">Layout</button>
-        <button class="tablinks" onclick="openTab(event, 'Imagenes')">Imágenes</button>
-        <button class="tablinks" onclick="openTab(event, 'Information')">Información</button>
+        <button class="tablinks" onclick="openTab(event, 'Layout')">
+            Layout
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Imagenes')">
+            Imágenes
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Information')">
+            Información
+        </button>
     </div>
 
     <!-- Layout Tab content -->
@@ -557,30 +553,32 @@
     <script>
         function getEventCodeFromURL() {
             const params = new URLSearchParams(window.location.search);
-            return params.get('EventCode');
+            return params.get("EventCode");
         }
 
         const eventCodeFromURL = getEventCodeFromURL();
-        const eventCodeInput = document.getElementById('eventCode');
+        const eventCodeInput = document.getElementById("eventCode");
         if (eventCodeFromURL) {
             eventCodeInput.value = eventCodeFromURL;
             fetchEventData();
         }
 
         function fetchEventData() {
-            const eventCode = document.getElementById('eventCode').value;
+            const eventCode = document.getElementById("eventCode").value;
             if (!eventCode) {
-                document.getElementById('errorMessage').textContent = 'Por favor, ingresa un código de evento.';
+                document.getElementById("errorMessage").textContent =
+                    "Por favor, ingresa un código de evento.";
                 return;
             }
 
             const apiUrl = `https://edge.bitsports-prod.co/api/composite-service/events/${eventCode}`;
             fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => displayEventData(data))
-                .catch(error => {
-                    document.getElementById('errorMessage').textContent = 'Error al obtener la información del evento.';
-                    console.error('Error:', error);
+                .then((response) => response.json())
+                .then((data) => displayEventData(data))
+                .catch((error) => {
+                    document.getElementById("errorMessage").textContent =
+                        "Error al obtener la información del evento.";
+                    console.error("Error:", error);
                 });
         }
 
@@ -590,94 +588,102 @@
         function goToJSON() {
             if (eventCode) {
                 const url = `https://edge.bitsports-prod.co/api/composite-service/events/${eventCode}`;
-                window.open(url, '_blank'); // Abre la URL en una nueva pestaña
+                window.open(url, "_blank"); // Abre la URL en una nueva pestaña
             } else {
-                alert('No se ha encontrado el código del evento');
+                alert("No se ha encontrado el código del evento");
             }
         }
         // Funcion para copiar en el portapapeles la URL del Visualidazor del Evento actual al usar el boton shareEvent()
         function shareEvent() {
             const eventUrl = `https://kel-hendros.github.io/eventVisualizer?EventCode=${eventCode}`;
-            navigator.clipboard.writeText(eventUrl).then(() => {
-                alert('URL copiada al portapapeles');
-            }).catch(err => {
-                console.error('Error al copiar la URL: ', err);
-            });
+            navigator.clipboard
+                .writeText(eventUrl)
+                .then(() => {
+                    alert("URL copiada al portapapeles");
+                })
+                .catch((err) => {
+                    console.error("Error al copiar la URL: ", err);
+                });
         }
         function goalAssist() {
             if (eventCode && eventCountry) {
                 let gaURL = `https://goal-assist.fanki.co/search?size=100&country=${eventCountry}&eventCode=${eventCode}&page=0`;
-                window.open(gaURL, '_blank');
+                window.open(gaURL, "_blank");
                 console.log(gaURL);
-
             } else {
-                alert('No se puede acceder a la busqueda en Goal Assist');
+                alert("No se puede acceder a la busqueda en Goal Assist");
             }
-
         }
         function goToFanki() {
-            if (eventCode && eventCountry) { // Verificamos que tanto eventCode como country existan
+            if (eventCode && eventCountry) {
+                // Verificamos que tanto eventCode como country existan
                 let baseUrl;
 
                 // Seleccionamos la URL base dependiendo del país
-                if (eventCountry === 'MEX') {
-                    baseUrl = 'https://fanki.com.mx/en/checkout/stadium/';
-                } else if (eventCountry === 'COL') {
-                    baseUrl = 'https://fanki.co/en/checkout/stadium/';
+                if (eventCountry === "MEX") {
+                    baseUrl = "https://fanki.com.mx/en/checkout/stadium/";
+                } else if (eventCountry === "COL") {
+                    baseUrl = "https://fanki.co/en/checkout/stadium/";
                 } else {
-                    alert('País no soportado.');
+                    alert("País no soportado.");
                     return; // Detenemos la ejecución si el país no es soportado
                 }
 
                 // Construimos la URL completa con el eventCode
                 const url = `${baseUrl}${eventCode}`;
-                window.open(url, '_blank'); // Abrimos la URL en una nueva pestaña
+                window.open(url, "_blank"); // Abrimos la URL en una nueva pestaña
             } else {
-                alert('No se ha encontrado el código del evento o el país.');
+                alert("No se ha encontrado el código del evento o el país.");
             }
         }
 
         function displayEventData(data) {
-            document.getElementById('errorMessage').textContent = '';
+            document.getElementById("errorMessage").textContent = "";
 
             // Limpiar contenido anterior
-            document.getElementById('eventDetails').innerHTML = '';
-            document.getElementById('layoutVenue').innerHTML = '';
-            document.getElementById('layoutSectionGroup').innerHTML = '';
-            document.getElementById('eventImages').innerHTML = '';
-            document.getElementById('eventInformation').innerHTML = '';
+            document.getElementById("eventDetails").innerHTML = "";
+            document.getElementById("layoutVenue").innerHTML = "";
+            document.getElementById("layoutSectionGroup").innerHTML = "";
+            document.getElementById("eventImages").innerHTML = "";
+            document.getElementById("eventInformation").innerHTML = "";
 
             // Mostrar nueva info
-            const eventDetails = document.getElementById('eventDetails');
-            const layoutDetails = document.getElementById('layout-venue');
-            const layoutSectionGroup = document.getElementById('layoutSectionGroup');
-            const eventImages = document.getElementById('eventImages');
-            const eventInformation = document.getElementById('eventInformation');
+            const eventDetails = document.getElementById("eventDetails");
+            const layoutDetails = document.getElementById("layout-venue");
+            const layoutSectionGroup =
+                document.getElementById("layoutSectionGroup");
+            const eventImages = document.getElementById("eventImages");
+            const eventInformation = document.getElementById("eventInformation");
 
             // Determinar si es un evento único o un abono
-            let eventType = '';
-            let extraDetails = '';
-            let templateToPrint = data.layout.templateToPrint || 'No disponible';
+            let eventType = "";
+            let extraDetails = "";
+            let templateToPrint = data.layout.templateToPrint || "No disponible";
 
-            if (data.type === 'EVENT_BUNDLE') {
-                eventType = 'Abono';
+            if (data.type === "EVENT_BUNDLE") {
+                eventType = "Abono";
                 const eventCount = data.events.length; // Contar el número de eventos
                 extraDetails = `
                 </div>
                     <div class="event-details">
                     <p><strong>Eventos incluidos (${eventCount}):</strong><p>
                     <ul>
-                        ${data.events.map(event => `<li><a href="https://kel-hendros.github.io/eventVisualizer?EventCode=${event}" target="_blank">${event}</a></li>`).join('')}
+                        ${data.events
+                        .map(
+                            (event) =>
+                                `<li><a href="https://kel-hendros.github.io/eventVisualizer?EventCode=${event}" target="_blank">${event}</a></li>`
+                        )
+                        .join("")}
                     </ul>
                     <p><strong>Template para Abono Físico:</strong> ${templateToPrint}</p>
                     </div>
                 `;
-            } else if (data.type === 'FOOTBALL') {
-                eventType = 'Partido';
-                extraDetails = '';
+            } else if (data.type === "FOOTBALL") {
+                eventType = "Partido";
+                extraDetails = "";
             } else {
-                eventType = 'Evento Desconocido';
-                extraDetails = '';
+                eventType = "Evento Desconocido";
+                extraDetails = "";
             }
 
             eventCode = data.code;
@@ -685,12 +691,12 @@
 
             // Objeto que asocia deportes con emojis
             const sportEmojis = {
-                FOOTBALL: '⚽',
-                BASKET: '🏀',
-                BASEBALL: '⚾',
-                PADDLE: '🏓',
-                TENNIS: '🎾',
-                RUGBY: '🏉'
+                FOOTBALL: "⚽",
+                BASKET: "🏀",
+                BASEBALL: "⚾",
+                PADDLE: "🏓",
+                TENNIS: "🎾",
+                RUGBY: "🏉",
                 // Puedes agregar más deportes y emojis aquí
             };
 
@@ -700,14 +706,14 @@
             }
 
             // Ejemplo de cómo usarlo
-            const sport = data.sport || 'Desconocido';
+            const sport = data.sport || "Desconocido";
             const sportDisplay = getSportWithEmoji(sport);
 
             // Objeto que mapea los códigos de país a sus correspondientes banderas y nombres
             const countryMap = {
-                MEX: '🇲🇽 Mexico',
-                COL: '🇨🇴 Colombia',
-                ARG: '🇦🇷 Argentina', // Puedes agregar más países aquí
+                MEX: "🇲🇽 Mexico",
+                COL: "🇨🇴 Colombia",
+                ARG: "🇦🇷 Argentina", // Puedes agregar más países aquí
             };
 
             // Función para obtener el país con la bandera
@@ -726,13 +732,10 @@
             const eventEnabled = data.enabled
                 ? '🟢 <span title="True">True</span>'
                 : '🔴 <span title="False">False</span>';
-            // Determinar si el evento está visible o no 
+            // Determinar si el evento está visible o no
             const eventShowInCatalog = data.showInCatalog
                 ? '🟢 <span title="True">True</span>'
                 : '🔴 <span title="False">False</span>';
-
-
-
 
             eventDetails.innerHTML = `
                 <div class="top-buttons">
@@ -742,7 +745,7 @@
                     <button onclick="goalAssist()">👟 Goal Assist</button>
                 </div>
                 <div class="event-header">
-                    <h1>${data.name || 'Nombre del Evento no disponible'} </h1>
+                    <h1>${data.name || "Nombre del Evento no disponible"} </h1>
 
                     <div class="contaienr">
 	                    <div class="tilt-box-wrap">
@@ -752,7 +755,10 @@
                             <span class="t_over"></span>		
                             <div class="tilt-box">
                                 <div class="image-header">
-                                    <img src="${data.images ? data.images.background.small : ''}" alt="Imagen del Evento">
+                                    <img src="${data.images
+                    ? data.images.background.small
+                    : ""
+                }" alt="Imagen del Evento">
                                 </div>
                             </div>
                         </div>
@@ -765,32 +771,64 @@
                         <p><strong>🏅 Deporte:</strong> ${sportDisplay}</p>
                         <p><strong>🎽 Equipo Local:</strong><br> 
                             <ul>
-                                <li><strong>Name: </strong>${data.homeTeam ? data.homeTeam.name : 'No disponible'} </li>
-                                <li><strong>Code: </strong>${data.homeTeam ? data.homeTeam.code : 'No disponible'} </li>
-                                <li><strong>Detail: </strong>${data.homeTeam ? data.homeTeam.detail : 'No disponible'}</li>
+                                <li><strong>Name: </strong>${data.homeTeam
+                    ? data.homeTeam.name
+                    : "No disponible"
+                } </li>
+                                <li><strong>Code: </strong>${data.homeTeam
+                    ? data.homeTeam.code
+                    : "No disponible"
+                } </li>
+                                <li><strong>Detail: </strong>${data.homeTeam
+                    ? data.homeTeam.detail
+                    : "No disponible"
+                }</li>
                             </ul>
                         </p>
                         <p><strong>🆚 Rival:</strong><br>
                             <ul>
-                                <li><strong>Name: </strong>${data.awayTeam ? data.awayTeam.name : 'No disponible'}</li>
-                                <li><strong>Code: </strong>${data.awayTeam ? data.awayTeam.code : 'No disponible'}</li>
-                                <li><strong>Detail: </strong>${data.awayTeam ? data.awayTeam.detail : 'No disponible'}</li>
+                                <li><strong>Name: </strong>${data.awayTeam
+                    ? data.awayTeam.name
+                    : "No disponible"
+                }</li>
+                                <li><strong>Code: </strong>${data.awayTeam
+                    ? data.awayTeam.code
+                    : "No disponible"
+                }</li>
+                                <li><strong>Detail: </strong>${data.awayTeam
+                    ? data.awayTeam.detail
+                    : "No disponible"
+                }</li>
                             </ul>
                         </p>
-                        <p><strong>🗓️ Fecha:</strong> ${data.date || 'No disponible'}</p>
-                        <p><strong>🏟️ Estadio:</strong> ${data.venue ? data.venue.name : 'No disponible'}</p>
+                        <p><strong>🗓️ Fecha:</strong> ${data.date || "No disponible"
+                }</p>
+                        <p><strong>🏟️ Estadio:</strong> ${data.venue ? data.venue.name : "No disponible"
+                }</p>
                     </div>
                     <div class="event-details">
-                        <p><strong>🏷️ Código del evento:</strong> ${data.code || 'No disponible'}</p>
-                        <p><strong>👨🏻‍💻 Coordinador:</strong> ${data.coordinator || 'No disponible'}</p>
+                        <p><strong>🏷️ Código del evento:</strong> ${data.code || "No disponible"
+                }</p>
+                        <p><strong>👨🏻‍💻 Coordinador:</strong> ${data.coordinator || "No disponible"
+                }</p>
                         <p><strong>🎫 Tipo de evento:</strong> ${eventType}</p>
                         <p><strong>🫥 Mostrar en el catálogo:</strong> ${eventShowInCatalog}</p>
                         <p><strong>🚦 Enabled:</strong> ${eventEnabled}</p>
                         <p><strong>♻️ Expired:</strong> ${eventStatus}</p>
-                        <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout ? data.layout.maxCapacityByFan : 'No disponible'}</p>
-                        <p><strong>👥 Capacidad disponible:</strong> ${data.layout ? data.layout.availableCapacity : 'No disponible'}</p>
-                        <p><strong>💵 Días máximos de reserva para pagos en efectivo:</strong> ${data.cashPaymentDueDays || 'No disponible'}</p>
-                        <p><strong>📝 Politicas de Privacidad:</strong> ${data.termsAndConditionsUrl ? `<a href="${data.termsAndConditionsUrl}" target="_blank">Políticas</a>` : 'No disponible'}</p>
+                        <p><strong>🎟️ Capacidad máxima por fan:</strong> ${data.layout
+                    ? data.layout.maxCapacityByFan
+                    : "No disponible"
+                }</p>
+                        <p><strong>👥 Capacidad disponible:</strong> ${data.layout
+                    ? data.layout.availableCapacity
+                    : "No disponible"
+                }</p>
+                        <p><strong>💵 Días máximos de reserva para pagos en efectivo:</strong> ${data.cashPaymentDueDays || "No disponible"
+                }</p>
+                        <p><strong>📝 Politicas de Privacidad:</strong> ${data.termsAndConditionsUrl
+                    ? `<a href="${data.termsAndConditionsUrl}" target="_blank">Políticas</a>`
+                    : "No disponible"
+                }</p>
                         ${extraDetails} 
                         </div>
                     
@@ -802,108 +840,121 @@
             // Display Layout details in its tab
             layoutVenue.innerHTML = `
                 <div style="text-align: center;">
-                    <img src="${data.layout.image ? data.layout.image.large : ''}" alt="Imagen del Estadio">
+                    <img src="${data.layout.image ? data.layout.image.large : ""
+                }" alt="Imagen del Estadio">
                 </div>
             `;
 
-            data.layout.sections.forEach(section => {
+            data.layout.sections.forEach((section) => {
                 layoutSectionGroup.innerHTML += `
-                    <button type="button" class="collapsible" style="border-color:${section.color};">
+                    <button type="button" class="collapsible" style="border-color:${section.color
+                    };">
                         <div>
-                            <p><strong>Section Code:</strong> ${section.code}</p>
-                            <p><strong>Section Name:</strong> ${section.name}</p>
+                            <p><strong>Section Code:</strong> ${section.code
+                    }</p>
+                            <p><strong>Section Name:</strong> ${section.name
+                    }</p>
                         </div>
                         <div>
-                            <p><strong>Precio:</strong> ${section.price ? section.price.value + ' ' + section.price.currency : 'No disponible'}</p>
-                            <p><strong>Disabled:</strong> ${section.disabled ? '🚫 True' : 'False'} | <strong>Exclusive:</strong> ${section.exclusive ? '✴️ True' : 'False'}</p>
+                            <p><strong>Precio:</strong> ${section.price
+                        ? section.price.value +
+                        " " +
+                        section.price.currency
+                        : "No disponible"
+                    }</p>
+                            <p><strong>Disabled:</strong> ${section.disabled ? "🚫 True" : "False"
+                    } | <strong>Exclusive:</strong> ${section.exclusive ? "✴️ True" : "False"
+                    }</p>
                         </div>
                     </button>           
                     <div class="content" style="border-color:${section.color};">
-                        ${section.sections && section.sections.length > 0 ?
-                        // Si hay subsecciones, mostrar botones de subsección y su JSON
-                        section.sections.map(subSection => `
-                                <button type="button" class="collapsible" style="border: 3px solid ${subSection.color};">
+                        ${section.sections && section.sections.length > 0
+                        ? // Si hay subsecciones, mostrar botones de subsección y su JSON
+                        section.sections
+                            .map(
+                                (subSection) => `
+                                <button type="button" class="collapsible" style="border: 3px solid ${subSection.color
+                                    };">
                                     <div class="subsection-flex">
                                         <div>
-                                            <p><strong>Subsection Code:</strong> ${subSection.code}</p>
-                                            <p><strong>Subsection Name:</strong> ${subSection.name}</p>
+                                            <p><strong>Subsection Code:</strong> ${subSection.code
+                                    }</p>
+                                            <p><strong>Subsection Name:</strong> ${subSection.name
+                                    }</p>
                                         </div>
                                         <div>
-                                            <p><strong>Precio:</strong> ${subSection.price ? subSection.price.value + ' ' + subSection.price.currency : 'No disponible'}</p>
-                                            <p><strong>Disabled:</strong> ${subSection.disabled ? '🚫 True' : 'False'} | <strong>Exclusive:</strong> ${subSection.exclusive ? '✴️ True' : 'False'}</p>
+                                            <p><strong>Precio:</strong> ${subSection.price
+                                        ? subSection.price.value +
+                                        " " +
+                                        subSection.price.currency
+                                        : "No disponible"
+                                    }</p>
+                                            <p><strong>Disabled:</strong> ${subSection.disabled
+                                        ? "🚫 True"
+                                        : "False"
+                                    } | <strong>Exclusive:</strong> ${subSection.exclusive ? "✴️ True" : "False"
+                                    }</p>
+                                        </div>
+                                        <div>
+                                            <p><strong>Numerada:</strong> ${subSection.numbered ? "Si" : "No"
+                                    }</p>
                                         </div>
                                     </div>
                                 </button>
-                                <div class="sub-collapsible-content" style="border-color: ${subSection.color};">
-                                    <pre>${JSON.stringify(subSection, null, 2)}</pre>
+                                <div class="sub-collapsible-content" style="border-color: ${subSection.color
+                                    };">
+                                    <pre>${JSON.stringify(
+                                        subSection,
+                                        null,
+                                        2
+                                    )}</pre>
                                 </div>
-                            `).join('')
-                        :
-                        // Si no hay subsecciones, mostrar el JSON completo de la sección
+                            `
+                            )
+                            .join("")
+                        : // Si no hay subsecciones, mostrar el JSON completo de la sección
                         `
                                 <pre>${JSON.stringify(section, null, 2)}</pre>
-                            `}
+                            `
+                    }
                     </div>
                 `;
             });
 
-            // Display Images in their tab      
+            // Display Images in their tab
             eventImages.innerHTML = `
     <div id="Imagenes2" class="tabcontent2">
-        <!-- Ticket Frame -->
+        <!-- Banner -->
         <div class="image-section">
-            <h3>Ticket Frame</h3>
+            <h3>Banner</h3>
             <div class="image-group">
                 Small
-                <a href="${data.ticketFrame?.small || '#'}" target="_blank">
-                    <img src="${data.ticketFrame?.small || ''}" alt="Ticket Frame Small" loading="lazy">
-                </a>
+                ${data.images?.banner?.small
+                    ? `
+                    <a href="${data.images.banner.small}" target="_blank">
+                    <img src="${data.images.banner.small}" alt="Banner Small" loading="lazy">
+                    </a>
+                `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
                 Medium
-                <a href="${data.ticketFrame?.medium || '#'}" target="_blank">
-                    <img src="${data.ticketFrame?.medium || ''}" alt="Ticket Frame Medium" loading="lazy">
-                </a>
+                ${data.images?.banner?.medium
+                    ? `
+                    <a href="${data.images.banner.medium}" target="_blank">
+                        <img src="${data.images.banner.medium}" alt="Banner Medium" loading="lazy">
+                    </a>
+                `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
                 Large
-                <a href="${data.ticketFrame?.large || '#'}" target="_blank">
-                    <img src="${data.ticketFrame?.large || ''}" alt="Ticket Frame Large" loading="lazy">
-                </a>
-            </div>
-        </div>
-
-        <!-- Equipo Local -->
-        <div class="image-section">
-            <h3>Equipo Local</h3>
-            <div class="image-group">
-                Small
-                <a href="${data.homeTeam?.image?.small || '#'}" target="_blank">
-                    <img src="${data.homeTeam?.image?.small || ''}" alt="Home Team Small" loading="lazy">
-                </a>
-                Medium
-                <a href="${data.homeTeam?.image?.medium || '#'}" target="_blank">
-                    <img src="${data.homeTeam?.image?.medium || ''}" alt="Home Team Medium" loading="lazy">
-                </a>
-                Large
-                <a href="${data.homeTeam?.image?.large || '#'}" target="_blank">
-                    <img src="${data.homeTeam?.image?.large || ''}" alt="Home Team Large" loading="lazy">
-                </a>
-            </div>
-        </div>
-
-        <!-- Equipo Rival -->
-        <div class="image-section">
-            <h3>Equipo Rival</h3>
-            <div class="image-group">
-                Small
-                <a href="${data.awayTeam?.image?.small || '#'}" target="_blank">
-                    <img src="${data.awayTeam?.image?.small || ''}" alt="Away Team Small" loading="lazy">
-                </a>
-                Medium
-                <a href="${data.awayTeam?.image?.medium || '#'}" target="_blank">
-                    <img src="${data.awayTeam?.image?.medium || ''}" alt="Away Team Medium" loading="lazy">
-                </a>
-                Large
-                <a href="${data.awayTeam?.image?.large || '#'}" target="_blank">
-                    <img src="${data.awayTeam?.image?.large || ''}" alt="Away Team Large" loading="lazy">
-                </a>
+                ${data.images?.banner?.large
+                    ? `
+                    <a href="${data.images.banner.large}" target="_blank">
+                        <img src="${data.images.banner.large}" alt="Banner Large" loading="lazy">
+                    </a>
+                `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
             </div>
         </div>
 
@@ -911,78 +962,211 @@
         <div class="image-section">
             <h3>Background</h3>
             <div class="image-group">
+            Small
+            ${data.images?.background?.small
+                    ? `
+                <a href="${data.images.background.small}" target="_blank">
+                    <img src="${data.images.background.small}" alt="Background Small" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Medium
+            ${data.images?.background?.medium
+                    ? `
+                <a href="${data.images.background.medium}" target="_blank">
+                    <img src="${data.images.background.medium}" alt="Background Medium" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Large
+            ${data.images?.background?.large
+                    ? `
+                <a href="${data.images.background.large}" target="_blank">
+                    <img src="${data.images.background.large}" alt="Background Large" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            </div>
+        </div>
+
+        
+
+        <!-- Equipo Local -->
+        <div class="image-section">
+            <h3>Equipo Local</h3>
+            <div class="image-group">
                 Small
-                <a href="${data.images?.background?.small || '#'}" target="_blank">
-                    <img src="${data.images?.background?.small || ''}" alt="Background Small" loading="lazy">
+              ${data.homeTeam?.image?.small
+                    ? `
+                <a href="${data.homeTeam.image.small}" target="_blank">
+                    <img src="${data.homeTeam.image.small}" alt="Equipo Local Small" loading="lazy">
                 </a>
+            `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Medium
+            ${data.homeTeam?.image?.medium
+                    ? `
+                <a href="${data.homeTeam.image.medium}" target="_blank">
+                    <img src="${data.homeTeam.image.medium}" alt="Equipo Local Medium" loading="lazy">
+                </a>
+            `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Large
+            ${data.homeTeam?.image?.large
+                    ? `
+                <a href="${data.homeTeam.image.large}" target="_blank">
+                    <img src="${data.homeTeam.image.large}" alt="Equipo Local Large" loading="lazy">
+                </a>
+            `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            </div>
+        </div>
+
+        <!-- Equipo Rival -->
+        <div class="image-section">
+            <h3>Equipo Rival</h3>
+            <div class="image-group">
+            Small
+            ${data.awayTeam?.image?.small
+                    ? `
+                <a href="${data.awayTeam.image.small}" target="_blank">
+                    <img src="${data.awayTeam.image.small}" alt="Away Team Small" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Medium
+            ${data.awayTeam?.image?.medium
+                    ? `
+                <a href="${data.awayTeam.image.medium}" target="_blank">
+                    <img src="${data.awayTeam.image.medium}" alt="Away Team Medium" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Large
+            ${data.awayTeam?.image?.large
+                    ? `
+                <a href="${data.awayTeam.image.large}" target="_blank">
+                    <img src="${data.awayTeam.image.large}" alt="Away Team Large" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            </div>
+        </div>
+
+        <!-- Ticket Frame -->
+        <div class="image-section">
+            <h3>Ticket Frame</h3>
+            <div class="image-group">
+                Small
+                ${data.ticketFrame?.small
+                    ? `
+                    <a href="${data.ticketFrame.small}" target="_blank">
+                        <img src="${data.ticketFrame.small}" alt="Ticket Frame Small" loading="lazy">
+                    </a>
+                `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
                 Medium
-                <a href="${data.images?.background?.medium || '#'}" target="_blank">
-                    <img src="${data.images?.background?.medium || ''}" alt="Background Medium" loading="lazy">
-                </a>
+                ${data.ticketFrame?.medium
+                    ? `
+                    <a href="${data.ticketFrame.medium}" target="_blank">
+                        <img src="${data.ticketFrame.medium}" alt="Ticket Frame Medium" loading="lazy">
+                    </a>
+                `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
                 Large
-                <a href="${data.images?.background?.large || '#'}" target="_blank">
-                    <img src="${data.images?.background?.large || ''}" alt="Background Large" loading="lazy">
+                ${data.ticketFrame?.large
+                    ? `
+                    <a href="${data.ticketFrame.large}" target="_blank">
+                        <img src="${data.ticketFrame.large}" alt="Ticket Frame Large" loading="lazy">
+                    </a>
+                `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            </div>
+        </div>
+
+        
+
+        <!-- Sponsor Banner -->
+        <div class="image-section">
+        <h3>Sponsor Banner</h3>
+        <div class="image-group">
+            Small
+            ${data.sponsorBanner?.small
+                    ? `
+                <a href="${data.sponsorBanner.small}" target="_blank">
+                    <img src="${data.sponsorBanner.small}" alt="Sponsor Banner Small" loading="lazy">
                 </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Medium
+            ${data.sponsorBanner?.medium
+                    ? `
+                <a href="${data.sponsorBanner.medium}" target="_blank">
+                    <img src="${data.sponsorBanner.medium}" alt="Sponsor Banner Medium" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Large
+            ${data.sponsorBanner?.large
+                    ? `
+                <a href="${data.sponsorBanner.large}" target="_blank">
+                    <img src="${data.sponsorBanner.large}" alt="Sponsor Banner Large" loading="lazy">
+                </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
             </div>
         </div>
 
         <!-- Header -->
         <div class="image-section">
-            <h3>Header</h3>
-            <div class="image-group">
-                Small
-                <a href="${data.images?.header?.small || '#'}" target="_blank">
-                    <img src="${data.images?.header?.small || ''}" alt="Header Small" loading="lazy">
+        <h3>Header</h3>
+        <div class="image-group">
+            Small
+            ${data.images?.header?.small
+                    ? `
+                <a href="${data.images.header.small}" target="_blank">
+                    <img src="${data.images.header.small}" alt="Header Small" loading="lazy">
                 </a>
-                Medium
-                <a href="${data.images?.header?.medium || '#'}" target="_blank">
-                    <img src="${data.images?.header?.medium || ''}" alt="Header Medium" loading="lazy">
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Medium
+            ${data.images?.header?.medium
+                    ? `
+                <a href="${data.images.header.medium}" target="_blank">
+                    <img src="${data.images.header.medium}" alt="Header Medium" loading="lazy">
                 </a>
-                Large
-                <a href="${data.images?.header?.large || '#'}" target="_blank">
-                    <img src="${data.images?.header?.large || ''}" alt="Header Large" loading="lazy">
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
+            Large
+            ${data.images?.header?.large
+                    ? `
+                <a href="${data.images.header.large}" target="_blank">
+                    <img src="${data.images.header.large}" alt="Header Large" loading="lazy">
                 </a>
+        `
+                    : `<sub>🚫 Sin Imagen 🚫</sub>`
+                }
             </div>
         </div>
-        <!-- Sponsor Banner -->
-        <div class="image-section">
-            <h3>Sponsor Banner</h3>
-            <div class="image-group">
-                Small
-                <a href="${data.sponsorBanner?.small || '#'}" target="_blank">
-                    <img src="${data.sponsorBanner?.small || ''}" alt="Banner Small" loading="lazy">
-                </a>
-                Medium
-                <a href="${data.sponsorBanner?.medium || '#'}" target="_blank">
-                    <img src="${data.sponsorBanner?.medium || ''}" alt="Banner Medium" loading="lazy">
-                </a>
-                Large
-                <a href="${data.sponsorBanner?.large || '#'}" target="_blank">
-                    <img src="${data.sponsorBanner?.large || ''}" alt="Banner Large" loading="lazy">
-                </a>
-            </div>
-        </div>
-        <!-- Banner -->
-        <div class="image-section">
-            <h3>Banner</h3>
-            <div class="image-group">
-                Small
-                <a href="${data.images?.banner?.small || '#'}" target="_blank">
-                    <img src="${data.images?.banner?.small || ''}" alt="Banner Small" loading="lazy">
-                </a>
-                Medium
-                <a href="${data.images?.banner?.medium || '#'}" target="_blank">
-                    <img src="${data.images?.banner?.medium || ''}" alt="Banner Medium" loading="lazy">
-                </a>
-                Large
-                <a href="${data.images?.banner?.large || '#'}" target="_blank">
-                    <img src="${data.images?.banner?.large || ''}" alt="Banner Large" loading="lazy">
-                </a>
-            </div>
-        </div>
-    </div>
+       
 `;
-
 
             // Nueva pestaña para Información del Evento
             eventInformation.innerHTML = `
@@ -1019,7 +1203,7 @@
             // Ocultar todo el contenido de las pestañas
             tabcontent = document.getElementsByClassName("tabcontent");
             for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";  // Asegúrate de ocultar correctamente las otras pestañas
+                tabcontent[i].style.display = "none"; // Asegúrate de ocultar correctamente las otras pestañas
             }
 
             // Eliminar la clase 'active' de todos los botones de pestañas
@@ -1029,13 +1213,13 @@
             }
 
             // Mostrar el contenido de la pestaña seleccionada
-            document.getElementById(tabName).style.display = "block";  // Asegúrate de mostrar la pestaña seleccionada correctamente
+            document.getElementById(tabName).style.display = "block"; // Asegúrate de mostrar la pestaña seleccionada correctamente
             evt.currentTarget.className += " active";
         }
 
         // Cargar la pestaña por defecto al cargar la página
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelector('.tablinks').click();  // Abrir la pestaña por defecto
+        document.addEventListener("DOMContentLoaded", (event) => {
+            document.querySelector(".tablinks").click(); // Abrir la pestaña por defecto
         });
 
         // If EventCode exists in URL, trigger data fetch
@@ -1043,17 +1227,15 @@
             fetchEventData();
         }
 
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const eventDetailsDivs = document.querySelectorAll('.event-details');
-            eventDetailsDivs.forEach(div => {
-                if (div.innerHTML.trim() === ' ') {
-                    div.style.display = 'none';
+        document.addEventListener("DOMContentLoaded", function () {
+            const eventDetailsDivs = document.querySelectorAll(".event-details");
+            eventDetailsDivs.forEach((div) => {
+                if (div.innerHTML.trim() === " ") {
+                    div.style.display = "none";
                 }
             });
         });
     </script>
-
 </body>
 
 </html>
