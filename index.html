@@ -633,6 +633,115 @@
             border-color: #c0c9d0;
             /* Gris */
         }
+
+        /* Contenedor de las cajas de promociones */
+        #promotionsContent {
+            display: flex;
+            /* Cambiamos de grid a flex para mayor flexibilidad */
+            flex-wrap: wrap;
+            /* Permite que las cajas pasen a la siguiente línea si es necesario */
+            gap: 15px;
+            /* Espaciado entre las cajas */
+            justify-content: center;
+            /* Alinea las cajas a la izquierda (puedes usar center o space-around si prefieres otro diseño) */
+            padding: 10px;
+        }
+
+        /* Caja principal para cada condición */
+        .promotion-condition-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            /* Centra el contenido */
+            font-size: 14px;
+            flex: 0 1 auto;
+            /* Permite que la caja se expanda hasta el contenido */
+            min-width: 200px;
+            /* Establece un ancho mínimo */
+            max-width: 100%;
+            /* Limita el ancho máximo al contenedor */
+            box-sizing: border-box;
+            /* Incluye paddings y bordes en el ancho total */
+        }
+
+        /* Título de cada condición */
+        .promotion-condition-box h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            white-space: normal;
+            /* Permite que el texto se ajuste en múltiples líneas */
+        }
+
+        /* Caja para cada ticketGroup */
+        .promotion-ticket-box {
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #ffffff;
+            font-size: 13px;
+            /* Reducir el tamaño de la fuente */
+            text-align: left;
+
+        }
+
+        /* Título y detalles */
+        .promotion-ticket-box h4 {
+            font-size: 14px;
+            /* Reducir tamaño del título */
+            margin: 5px 0;
+            color: #4682b4;
+        }
+
+        .promotion-ticket-box p {
+            margin: 3px 0;
+            color: #555;
+        }
+
+        /* Estilo normal para las cajas */
+        .promotion-condition-box {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Efectos al hacer hover */
+        .promotion-condition-box:hover {
+            transform: scale(1.05);
+            /* Aumenta ligeramente el tamaño */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            /* Añade una sombra más prominente */
+            background-color: #e6f7ff;
+            /* Cambia el color de fondo a un tono suave */
+        }
+
+        /* Efecto en los títulos */
+        .promotion-condition-box h3:hover {
+            color: #007bff;
+            /* Cambia el color del título */
+            text-decoration: underline;
+            /* Añade subrayado */
+        }
+
+        /* Efectos en las subcajas (ticketGroup) */
+        .promotion-ticket-box {
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Hover en subcajas */
+        .promotion-ticket-box:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* Añade sombra */
+            transform: translateY(-3px);
+            /* Eleva ligeramente la subcaja */
+
+        }
+
+        /* Opcional: cambia el cursor al pasar sobre títulos clickeables */
+        .promotion-condition-box h3 a {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -666,6 +775,9 @@
         <button class="tablinks" onclick="openTab(event, 'Information')">
             Información
         </button>
+        <button class="tablinks" onclick="openTab(event, 'Promociones')" id="promotionsTab" style="display: none;">
+            Promociones
+        </button>
     </div>
 
     <!-- Layout Tab content -->
@@ -684,6 +796,11 @@
     <!-- Informacion Tab Content -->
     <div id="Information" class="tabcontent">
         <div id="eventInformation"></div>
+    </div>
+
+    <!-- Promociones Tab Content -->
+    <div id="Promociones" class="tabcontent">
+        <div id="promotionsContent"></div>
     </div>
 
     <div id="errorMessage" class="error"></div>
@@ -797,6 +914,48 @@
             document.getElementById("layoutSectionGroup").innerHTML = "";
             document.getElementById("eventImages").innerHTML = "";
             document.getElementById("eventInformation").innerHTML = "";
+            document.getElementById("promotionsContent").innerHTML = "";
+
+            // Muestra la pestaña de promociones si el objeto Rules existe
+            const promotionsTab = document.getElementById("promotionsTab");
+            if (data.descriptor && data.descriptor.rules && Array.isArray(data.descriptor.rules)) {
+                promotionsTab.style.display = "block";
+                const promotionsContent = document.getElementById("promotionsContent");
+
+                data.descriptor.rules.forEach((rule) => {
+                    // Caja principal para cada condition
+                    const conditionBox = document.createElement("div");
+                    conditionBox.className = "promotion-condition-box";
+
+                    // Genera el enlace clickeable para el eventCode
+                    const eventLink = `<a href="?EventCode=${rule.condition.event}" target="_self">${rule.condition.event}</a>`;
+
+                    conditionBox.innerHTML = `
+                <h3>${eventLink}</h3>
+            `;
+
+                    // Añade los ticketGroups dentro de la condition
+                    rule.ticketGrops.forEach((ticketGroup) => {
+                        const ticketBox = document.createElement("div");
+                        ticketBox.className = "promotion-ticket-box";
+                        ticketBox.innerHTML = `
+                    <h4>${ticketGroup.description || "Sin descripción"}</h4>
+                    <p><strong>${ticketGroup.shortDescription || "Sin subtítulo"}</strong></p>
+                    <p>Cantidad de Tickets otorgados: ${ticketGroup.quantity}</p>
+                    <p>Descuento: ${ticketGroup.discount}%</p>
+                `;
+
+                        // Añade el ticketBox al conditionBox
+                        conditionBox.appendChild(ticketBox);
+                    });
+
+                    // Añade el conditionBox al contenido de promociones
+                    promotionsContent.appendChild(conditionBox);
+                });
+            } else {
+                promotionsTab.style.display = "none";
+            }
+
 
             // Mostrar nueva info
             const eventDetails = document.getElementById("eventDetails");
