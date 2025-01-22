@@ -939,41 +939,53 @@
 
             // Muestra la pestaña de promociones si el objeto Rules existe
             const promotionsTab = document.getElementById("promotionsTab");
+
             if (data.descriptor && data.descriptor.rules && Array.isArray(data.descriptor.rules)) {
-                promotionsTab.style.display = "block";
                 const promotionsContent = document.getElementById("promotionsContent");
+                let validRulesFound = false; // Bandera para saber si hay reglas válidas
 
                 data.descriptor.rules.forEach((rule) => {
-                    // Caja principal para cada condition
-                    const conditionBox = document.createElement("div");
-                    conditionBox.className = "promotion-condition-box";
+                    if (rule.condition && rule.condition.event) {
+                        validRulesFound = true; // Encontramos al menos una regla válida
 
-                    // Genera el enlace clickeable para el eventCode
-                    const eventLink = `<a href="?EventCode=${rule.condition.event}" target="_self">${rule.condition.event}</a>`;
+                        // Caja principal para cada condition
+                        const conditionBox = document.createElement("div");
+                        conditionBox.className = "promotion-condition-box";
 
-                    conditionBox.innerHTML = `
-                <h3>${eventLink}</h3>
-            `;
+                        // Genera el enlace clickeable para el eventCode
+                        const eventLink = `<a href="?EventCode=${rule.condition.event}" target="_self">${rule.condition.event}</a>`;
+                        conditionBox.innerHTML = `<h3>${eventLink}</h3>`;
 
-                    // Añade los ticketGroups dentro de la condition
-                    rule.ticketGrops.forEach((ticketGroup) => {
-                        const ticketBox = document.createElement("div");
-                        ticketBox.className = "promotion-ticket-box";
-                        ticketBox.innerHTML = `
-                    <h4>${ticketGroup.description || "Sin descripción"}</h4>
-                    <p><strong>${ticketGroup.shortDescription || "Sin subtítulo"}</strong></p>
-                    <p>Cantidad de Tickets otorgados: ${ticketGroup.quantity}</p>
-                    <p>Descuento: ${ticketGroup.discount}%</p>
-                `;
+                        // Añade los ticketGroups dentro de la condition, si existen
+                        if (Array.isArray(rule.ticketGrops)) {
+                            rule.ticketGrops.forEach((ticketGroup) => {
+                                const ticketBox = document.createElement("div");
+                                ticketBox.className = "promotion-ticket-box";
+                                ticketBox.innerHTML = `
+                        <h4>${ticketGroup.description || "Sin descripción"}</h4>
+                        <p><strong>${ticketGroup.shortDescription || "Sin subtítulo"}</strong></p>
+                        <p>Cantidad de Tickets otorgados: ${ticketGroup.quantity || 0}</p>
+                        <p>Descuento: ${ticketGroup.discount || 0}%</p>
+                    `;
 
-                        // Añade el ticketBox al conditionBox
-                        conditionBox.appendChild(ticketBox);
-                    });
+                                // Añade el ticketBox al conditionBox
+                                conditionBox.appendChild(ticketBox);
+                            });
+                        }
 
-                    // Añade el conditionBox al contenido de promociones
-                    promotionsContent.appendChild(conditionBox);
+                        // Añade el conditionBox al contenido de promociones
+                        promotionsContent.appendChild(conditionBox);
+                    }
                 });
+
+                // Mostrar la pestaña solo si hay reglas válidas
+                if (validRulesFound) {
+                    promotionsTab.style.display = "block";
+                } else {
+                    promotionsTab.style.display = "none";
+                }
             } else {
+                // Si no hay reglas, oculta la pestaña
                 promotionsTab.style.display = "none";
             }
 
