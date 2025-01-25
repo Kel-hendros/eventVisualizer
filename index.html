@@ -847,7 +847,7 @@
                 return;
             }
 
-            const apiUrl = `https://edge.bitsports-prod.co/api/composite-service/events/${eventCode}`;
+            const apiUrl = `https://edge.fanki.co/api/composite-service/events/${eventCode}`;
             fetch(apiUrl)
                 .then((response) => response.json())
                 .then((data) => displayEventData(data))
@@ -876,7 +876,7 @@
 
         function goToJSON() {
             if (eventCode) {
-                const url = `https://edge.bitsports-prod.co/api/composite-service/events/${eventCode}`;
+                const url = `https://edge.fanki.co/api/composite-service/events/${eventCode}`;
                 window.open(url, "_blank"); // Abre la URL en una nueva pestaña
             } else {
                 alert("No se ha encontrado el código del evento");
@@ -1244,8 +1244,8 @@
                                     }</p>
                                         </div>
                                         <div>
-                                            <p><strong>Numerada:</strong> ${subSection.numbered ? "Si" : "No"
-                                    }</p>
+                                            <p><strong>Numerada:</strong> ${subSection.numbered ? "Si" : "No"}</p>
+                                            <p><strong>Asientos disponibles:</strong> ${subSection.availableCapacity ? subSection.availableCapacity : "-"}</p>
                                         </div>
                                     </div>
                                 </button>
