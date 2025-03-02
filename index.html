@@ -6,6 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Información de Evento</title>
     <style>
+        /* Contenedor flotante de la pelota */
+        #ballContainer {
+            position: absolute;
+            pointer-events: none;
+            /* Permite que los clicks se registren en la pelota, ya que ésta tendrá pointer-events auto */
+        }
+
+        /* La pelota (emoji) */
+        #floatingBall {
+            position: absolute;
+            font-size: 48px;
+            user-select: none;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
         /* IMPORT FONT */
         @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
@@ -1543,6 +1559,7 @@
                     }
                 });
             }
+
         }
 
         function openTab(evt, tabName) {
@@ -1722,7 +1739,101 @@
             return color;
         }
 
+        (function () {
+            const eventDetails = document.getElementById('eventDetails');
+            if (!eventDetails) return;
+
+            // Creamos (o reutilizamos) el contenedor flotante
+            let ballContainer = document.getElementById('ballContainer');
+            if (!ballContainer) {
+                ballContainer = document.createElement('div');
+                ballContainer.id = 'ballContainer';
+                document.body.appendChild(ballContainer);
+            }
+
+            // Función para actualizar la posición y tamaño del contenedor según eventDetails
+            function updateBallContainerPosition() {
+                const rect = eventDetails.getBoundingClientRect();
+                ballContainer.style.left = (rect.left + window.scrollX) + 'px';
+                ballContainer.style.top = (rect.top + window.scrollY) + 'px';
+                ballContainer.style.width = rect.width + 'px';
+                ballContainer.style.height = rect.height + 'px';
+            }
+
+            // Actualizamos al inicio y en cada scroll/resize
+            updateBallContainerPosition();
+            window.addEventListener('scroll', updateBallContainerPosition);
+            window.addEventListener('resize', updateBallContainerPosition);
+
+            // Creamos la pelota si no existe
+            let ball = document.getElementById('floatingBall');
+            if (!ball) {
+                ball = document.createElement('div');
+                ball.id = 'floatingBall';
+                ball.textContent = '⚽';
+                ballContainer.appendChild(ball);
+            }
+
+            // Variables de física
+            let posX = ballContainer.offsetWidth / 2 - 24; // 24 = mitad del font-size (48px)
+            let posY = 0;
+            let velX = 0, velY = 0;
+            const gravity = 0.2, bounceFactor = 0.7, friction = 0.8;
+            let angle = 0; // Angulo de rotación en grados
+            const rotationFactor = 5; //Que tan rapido rota
+
+            function animate() {
+                // Actualizamos en cada frame por si eventDetails cambia
+                updateBallContainerPosition();
+                const containerWidth = ballContainer.offsetWidth;
+                const containerHeight = ballContainer.offsetHeight;
+                const floorOffset = -10; // Píxeles extra para que el "piso" esté 10px más abajo
+
+                velY += gravity;
+                posX += velX;
+                posY += velY;
+
+                // Rebote en el suelo con floorOffset
+                if (posY + ball.offsetHeight > containerHeight - floorOffset) {
+                    posY = containerHeight - ball.offsetHeight - floorOffset;
+                    velY *= -bounceFactor;
+                    velX *= friction;
+                }
+                // Rebote en laterales
+                if (posX < 0) {
+                    posX = 0;
+                    velX *= -bounceFactor;
+                } else if (posX + ball.offsetWidth > containerWidth) {
+                    posX = containerWidth - ball.offsetWidth;
+                    velX *= -bounceFactor;
+                }
+
+                // Actualizamos el angulo basado en la velocidad horizontal
+                angle += velX * rotationFactor;
+
+                // Aplicamos posición y rotación    
+                ball.style.left = posX + 'px';
+                ball.style.top = posY + 'px';
+                ball.style.transform = "rotate(" + angle + "deg)";
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // Al hacer click, la pelota salta y se desplaza según el lado clickeado
+            ball.addEventListener('click', function (e) {
+                const rect = ball.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const clickX = e.clientX - rect.left;
+                const diffX = clickX - centerX;
+                const factor = 0.2;
+                velX = -diffX * factor;
+                velY = -15;
+            });
+        })();
     </script>
+
 
 </body>
 
