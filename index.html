@@ -773,6 +773,48 @@
         .promotion-condition-box h3 a {
             cursor: pointer;
         }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+
+            justify-content: center;
+        }
+
+        .chip {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 15px;
+            background-color: #60abfc;
+            cursor: pointer;
+            font-size: .9rem;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.592);
+        }
+
+        .chip:hover {
+            background-color: #4682B4;
+        }
+
+        .chip.active-chip {
+            border: none;
+            background-color: #4682B4;
+            color: #fff;
+            transition: background-color 0.3s ease;
+
+
+        }
+
+        .chip.active-chip:hover {
+            background-color: #60abfc;
+        }
+
+        /* reduce shadow on click to simulate press */
+        .chip:active {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 
@@ -789,12 +831,26 @@
             <h2>Visualizador de Eventos</h2>
         </div>
         <div class="column">
+
             <!-- Columna derecha vacía -->
         </div>
     </div>
 
     <div id="eventDetails" class="event-info"></div>
+    <!-- Vista Calendario (inicialmente oculta) -->
+    <div id="calendarView" style="display:none;">
+        <div id="calendarHeader">
+            <button onclick="changeMonth(-1)">◀️</button>
+            <h2 id="calendarTitle"></h2>
+            <button onclick="changeMonth(1)">▶️</button>
+        </div>
 
+        <!-- Fila para encabezados de días -->
+        <div id="dayNamesRow" class="day-names-row"></div>
+
+        <!-- Aquí van los días del mes -->
+        <div id="daysGrid" class="days-grid"></div>
+    </div>
     <!-- Tabs for Layout and other sections -->
     <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'Layout')">
@@ -837,6 +893,7 @@
     <div id="errorMessage" class="error"></div>
 
     <script>
+
         function getEventCodeFromURL() {
             const params = new URLSearchParams(window.location.search);
             return params.get("EventCode");
@@ -1627,12 +1684,17 @@
                 });
 
                 // Ordenar eventos por el nombre del equipo local
+                // Object.keys(eventsByCountry).forEach(country => {
+                //     eventsByCountry[country].sort((a, b) => {
+                //         const teamA = a.homeTeam.name.toLowerCase();
+                //         const teamB = b.homeTeam.name.toLowerCase();
+                //         return teamA.localeCompare(teamB);
+                //     });
+                // });
+
+                // Ordenar eventos por fecha
                 Object.keys(eventsByCountry).forEach(country => {
-                    eventsByCountry[country].sort((a, b) => {
-                        const teamA = a.homeTeam.name.toLowerCase();
-                        const teamB = b.homeTeam.name.toLowerCase();
-                        return teamA.localeCompare(teamB);
-                    });
+                    eventsByCountry[country].sort((a, b) => new Date(a.date) - new Date(b.date));
                 });
 
                 // Mostrar los eventos en la interfaz
@@ -1654,6 +1716,42 @@
                     countryTitle.className = "country-title";
                     countryTitle.textContent = `Eventos en ${country}`;
                     countrySection.appendChild(countryTitle);
+
+                    // Contenedor de chips
+                    const chipsContainer = document.createElement("div");
+                    chipsContainer.className = "chips-container";
+
+                    // Obtener los HomeTeam unicos
+                    const homeTeams = [...new Set(events.map(event => event.homeTeam.name))];
+                    // Ordenar los equipos por nombre
+                    homeTeams.sort((a, b) => a.localeCompare(b));
+
+                    //Objeto para controlar el estado de cada filtro (true = mostrar)
+                    const activeFilters = {};
+                    homeTeams.forEach(team => {
+                        const chip = document.createElement("button");
+                        chip.textContent = team;
+                        chip.className = "chip active-chip";
+                        chip.addEventListener("click", () => {
+                            activeFilters[team] = !activeFilters[team];
+                            chip.classList.toggle("active-chip");
+                            // Verificar si hay al menos un chip activo
+                            const anyActive = Object.values(activeFilters).some(isActive => isActive === true);
+                            const cards = eventCards.querySelectorAll(".event-card");
+                            cards.forEach(card => {
+                                const cardTeam = card.getAttribute("data-home-team");
+                                // Si ningún chip está activo, se muestran todas las cards
+                                if (!anyActive) {
+                                    card.style.display = "flex";
+                                } else {
+                                    card.style.display = activeFilters[cardTeam] ? "flex" : "none";
+                                }
+                            });
+                        });
+                        chipsContainer.appendChild(chip);
+                    });
+                    countrySection.appendChild(chipsContainer); // Agregar el contenedor de chips al país
+
 
                     // Contenedor de tarjetas de eventos
                     const eventCards = document.createElement("div");
@@ -1679,6 +1777,8 @@
 
                         const card = document.createElement("div");
                         card.className = "event-card";
+                        // Agregar atributo para el HomeTeam
+                        card.setAttribute("data-home-team", event.homeTeam.name); // Se usará para filtrar
 
                         // Generar un color único basado en el nombre del equipo
                         const teamColor = stringToColor(event.homeTeam.name || "default");
@@ -1687,15 +1787,16 @@
 
 
                         card.innerHTML = `
-                    <span class="pill ${pillClass}">${eventType}</span>
-                    <img src="${event.images.background.small}" alt="${event.name}">
-                    <div class="card-content">
+                        <span class="pill ${pillClass}">${eventType}</span>
+                        <img src="${event.images.background.small}" alt="${event.name}">
+                      <div class="card-content">
                         <h4>${event.name}</h4>
                         <p><strong>Fecha:</strong> ${new Date(event.date).toLocaleDateString()}</p>
-                        <p><strong>Equipo:</strong> ${event.homeTeam.name}<p>
+                        <p><strong>Equipo:</strong> ${event.homeTeam.name}</p>
+                        <p><strong>Código:</strong> <span style="font-size: .7rem; color: #666;">${event.code}</span></p>
                         <button onclick="fetchEventDetails('${event.code}')">Ver Detalles</button>
-                    </div>
-                `;
+                      </div>
+                    `;
                         eventCards.appendChild(card);
                     });
 
@@ -1832,6 +1933,104 @@
                 velY = -15;
             });
         })();
+
+        // Calendar view
+        // Variables para la vista calendario
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth(); // 0 = Enero, 11 = Diciembre
+
+        // Función para alternar entre vista de lista y vista de calendario
+        function toggleCalendarView() {
+            const listView = document.getElementById("eventDetails");
+            const calendarView = document.getElementById("calendarView");
+            if (calendarView.style.display === "none") {
+                calendarView.style.display = "block";
+                listView.style.display = "none";
+                renderCalendar(currentYear, currentMonth);
+            } else {
+                calendarView.style.display = "none";
+                listView.style.display = "block";
+            }
+        }
+
+        // Función para cambiar de mes (delta: -1 para mes anterior, +1 para siguiente)
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentYear, currentMonth);
+        }
+
+        // Función para renderizar el calendario
+        function renderCalendar(year, month) {
+            // Título
+            const calendarTitle = document.getElementById("calendarTitle");
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            calendarTitle.textContent = `${monthNames[month]} ${year}`;
+
+            // Encabezados de días
+            const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+            const dayNamesRow = document.getElementById("dayNamesRow");
+            dayNamesRow.innerHTML = ""; // limpiar
+
+            dayNames.forEach(day => {
+                const cell = document.createElement("div");
+                cell.textContent = day;
+                cell.className = "day-name-cell";
+                dayNamesRow.appendChild(cell);
+            });
+
+            // Días del mes
+            const daysGrid = document.getElementById("daysGrid");
+            daysGrid.innerHTML = ""; // limpiar
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Rellenar celdas vacías antes del primer día
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement("div");
+                emptyCell.className = "day-cell";
+                daysGrid.appendChild(emptyCell);
+            }
+
+            // Crear celdas para cada día
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement("div");
+                cell.className = "day-cell";
+
+                // Número del día
+                const dayNumber = document.createElement("div");
+                dayNumber.className = "day-number";
+                dayNumber.textContent = day;
+                cell.appendChild(dayNumber);
+
+                // Filtrar eventos en allEvents
+                const cellDate = new Date(year, month, day);
+                const eventsForDay = allEvents.filter(ev => {
+                    const evDate = new Date(ev.date);
+                    return evDate.toDateString() === cellDate.toDateString();
+                });
+
+                // Crear mini tarjetas
+                eventsForDay.forEach(ev => {
+                    const miniCard = document.createElement("div");
+                    miniCard.className = "mini-card";
+                    miniCard.textContent = `${ev.name} (${ev.code}) - ${ev.homeTeam.name}`;
+                    miniCard.addEventListener("click", () => fetchEventDetails(ev.code));
+                    cell.appendChild(miniCard);
+                });
+
+                daysGrid.appendChild(cell);
+            }
+        }
+
+
     </script>
 
 
