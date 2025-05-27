@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotional Banners</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-around;
+            width: 100%;
+            gap: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+        }
+
+        #result-container {
+            width: 70%;
+            height: 100vh;
+            overflow-y: auto;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #result-container h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #editor-container {
+            width: 30%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #editor-container h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #editor-container button {
+            top: 10px;
+            right: 10px;
+            background-color: #3d3d3d;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+            padding: 5px 15px;
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        #editor-container button:hover {
+            background-color: #95b4b9;
+        }
+
+
+        #result {
+            width: 100%;
+        }
+
+        #editor {
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 10px;
+
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .cards {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .banner {
+            position: relative;
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+        }
+
+        .banner-title,
+        .banner-image,
+        .banner-info {
+            margin-bottom: 10px;
+        }
+
+        .banner-title {
+            text-align: left;
+        }
+
+        .banner-title button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #3d3d3d;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+            padding: 5px 10px;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        /* on click, push it  */
+        .banner-title button:hover {
+            background-color: #95b4b9;
+        }
+
+
+        .banner-image img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .image-link {
+            margin-top: 10px;
+            background-color: #3d3d3d;
+            font-size: 0.9em;
+            color: #ebebeb;
+            padding: 5px;
+            border-radius: 8px;
+            display: inline-block;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            word-break: break-all;
+            width: calc(100% - 10px);
+            font-family: monospace;
+        }
+
+        .image-link:hover {
+            background-color: #95b4b9;
+        }
+
+        .banner-info {
+            font-size: 0.8em;
+        }
+
+        .banner-info p {
+            margin: 5px 0;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 5px;
+
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 1px;
+            font-weight: bold;
+            width: 30%;
+
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 70%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group input[type="number"] {
+            padding: 5px;
+            width: 70%;
+            box-sizing: border-box;
+
+        }
+
+        .form-group input[type="radio"],
+        .form-group input[type="checkbox"] {
+            width: 100%;
+
+        }
+
+        .country-selector {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: nowrap;
+            width: 70%;
+        }
+
+        .country-selector div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+        }
+
+        .json-output,
+        #jsonInput {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            position: relative;
+            min-height: 100px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .json-output pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background-color: #3d3d3d;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+
+        .JSON-input {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: space-between;
+            height: 100%;
+            gap: 30px;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .visualizar {
+            top: 10px;
+            right: 10px;
+            background-color: #3d3d3d;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+            padding: 5px 15px;
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .visualizar:hover {
+            background-color: #95b4b9;
+        }
+
+        #jsonInput {
+            margin-top: 0;
+        }
+
+        #header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background-color: #3d3d3d;
+            color: #fff;
+            padding-inline: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+
+        }
+
+        #header a {
+            color: black;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: .8em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <span></span>
+        <h1>Promotional Banners</h1>
+        <a href="index.html">↩️ Volver a Eventos</a>
+    </div>
+    <div class="JSON-input">
+        <textarea id="jsonInput" placeholder="Pega tu JSON aquí"></textarea>
+        <button class="visualizar" onclick="visualizarJSON()">Visualizar</button>
+    </div>
+    <div class="container">
+        <div id="result-container">
+            <h1>Resultados</h1>
+            <div id="result"></div>
+        </div>
+        <div id="editor-container">
+            <h1>Editor</h1>
+            <button onclick="resetForm()" style="margin-bottom: 10px;">♻️ Limpiar</button>
+            <div id="editor">
+                <div class="form-group">
+                    <label for="bannerName">Nombre del banner</label>
+                    <input type="text" id="bannerName" oninput="updateJSON()">
+                </div>
+                <div class="form-group">
+                    <label for="bannerId">ID (solo lectura)</label>
+                    <input type="text" id="bannerId" readonly style="background-color: #eee;">
+                </div>
+                <div class="form-group">
+                    <label for="bannerImage">URL de la Imagen</label>
+                    <input type="text" id="bannerImage" oninput="updateJSON(); updateImagePreview()">
+
+
+                </div>
+                <div id="imagePreview"></div>
+                <div class="form-group">
+                    <label>Destino</label>
+                    <select id="deeplink" onchange="updateJSON()">
+                        <option value="home">Home</option>
+                        <option value="register">Registración</option>
+                        <option value="events">Eventos</option>
+                        <option value="my-purchases">Mis Ordenes</option>
+                        <option value="credit-card">Tarjeta Fanki</option>
+                        <option value="settings">Configuración</option>
+                        <option value="events/EVENT">Eventos</option>
+                        <option value="events/INSCRIPTION">Inscripciones</option>
+                        <option value="events/TOUR">Tours</option>
+                        <option value="team-events/{teamCode}">Equipo</option>
+                        <option value="event-detail/{eventCode}">Evento Detalle</option>
+                    </select>
+                    <input type="text" id="extraParam" placeholder="Ingrese el código" style="display:none;"
+                        oninput="updateJSON()">
+                </div>
+                <div class="form-group">
+                    <label>Encendido</label>
+                    <div class="check-container">
+                        <input type="checkbox" id="enabled" onclick="updateJSON()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>País</label>
+                    <div class="country-selector">
+                        <div>
+                            <input type="radio" name="country" value="MEX" onclick="updateJSON()"> 🇲🇽
+                        </div>
+                        <div>
+                            <input type="radio" name="country" value="COL" onclick="updateJSON()"> 🇨🇴
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Sección</label>
+                    <select id="section" onchange="updateJSON()">
+                        <option value="FEATURED">FEATURED</option>
+                        <option value="SPONSOR">SPONSOR</option>
+                        <option value="MAIN">MAIN</option>
+                        <option value="SECONDARY">SECONDARY</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Sección de la App</label>
+                    <select id="path" onchange="updateJSON()">
+                        <option value="home">home</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="order">Posición</label>
+                    <input type="number" id="order" oninput="updateJSON()">
+                </div>
+                <div class="json-output" id="jsonOutput">
+                    <div class="copy-button" onclick="copyToClipboard()">Copiar</div>
+                    <pre id="jsonResult"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+
+    <script>
+        // Cargar JSON desde localStorage al iniciar
+        window.onload = function () {
+            const savedJson = localStorage.getItem('jsonInput');
+            if (savedJson) {
+                document.getElementById('jsonInput').value = savedJson;
+                visualizarJSON();
+            }
+        };
+
+        function visualizarJSON() {
+            const input = document.getElementById('jsonInput').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = ''; // Limpiar resultados anteriores
+
+            // Guardar JSON en localStorage
+            localStorage.setItem('jsonInput', input);
+
+            try {
+                const banners = JSON.parse(input);
+                const sectionsOrder = ['FEATURED', 'SPONSOR', 'MAIN', 'SECONDARY'];
+                const sections = {};
+
+                // Agrupar banners por sección
+                banners.forEach(banner => {
+                    if (!sections[banner.section]) {
+                        sections[banner.section] = [];
+                    }
+                    sections[banner.section].push(banner);
+                });
+
+                // Crear elementos HTML para cada sección en el orden deseado
+                sectionsOrder.forEach(section => {
+                    if (sections[section]) {
+
+                        // Ordenar banners por orden dentro de cada sección
+                        sections[section].sort((a, b) => a.order - b.order);
+
+                        const sectionDiv = document.createElement('div');
+                        sectionDiv.className = 'section';
+                        sectionDiv.innerHTML = `<h3>${section}</h3>`;
+
+                        const cardsDiv = document.createElement('div');
+                        cardsDiv.className = 'cards';
+
+                        sections[section].forEach(banner => {
+                            const bannerDiv = document.createElement('div');
+                            bannerDiv.className = 'banner';
+
+                            //Analizar deeplink
+                            let deeplinkHTML = ``;
+                            if (banner.deeplink.startsWith('event-detail/')) {
+                                const eventCode = banner.deeplink.split('/').pop();
+                                const targetEvent = `https://kel-hendros.github.io/eventVisualizer?EventCode=${eventCode}`;
+                                deeplinkHTML = `<p><strong>Evento:</strong> <a href="${targetEvent}" target="_blank">${eventCode}</a></p>`;
+                            }
+
+                            let deepLinkWarning = ``;
+                            if (banner.deeplink.includes('{')) {
+                                deepLinkWarning = `<p style="color: red;">⚠️ Este enlace contiene un parámetro mal configurado y no funcionará. Asegúrate de resolver el problema.</p>`;
+                            }
+
+                            bannerDiv.innerHTML = `
+                                <div class="banner-title">
+                                    <h3>${banner.name}</h3>
+                                    <p>ID: ${banner.id}</p>
+                                    <button onclick='editarBanner(${JSON.stringify(banner)})' title="Editar">✏️</button>
+                                </div>
+                                <div class="banner-image">
+                                    <img src="${banner.image}" alt="${banner.name}">
+                                    <a class="image-link" href="${banner.image}" target="_blank">${banner.image}</a></p>
+                                </div>
+                                <div class="banner-info">
+                                    <p><strong>Sección:</strong> ${banner.section}</p>
+                                    <p><strong>Sección de la App:</strong> ${banner.path}</p>
+                                    <p><strong>Posición:</strong> ${banner.order}</p>
+                                    <p><strong>País:</strong> ${banner.country}</p>
+                                    <p><strong>Enlace:</strong> ${banner.deeplink}</p>
+                                    ${deeplinkHTML}
+                                    ${deepLinkWarning}
+                                    <p><strong>Habilitado:</strong> ${banner.enabled ? 'Sí' : 'No'}</p>
+                                </div>
+                            `;
+                            cardsDiv.appendChild(bannerDiv);
+                        });
+
+                        sectionDiv.appendChild(cardsDiv);
+                        resultDiv.appendChild(sectionDiv);
+                    }
+                });
+            } catch (error) {
+                resultDiv.innerHTML = 'Error: JSON inválido';
+            }
+        }
+
+        function updateJSON() {
+            const id = document.getElementById('bannerId').value;
+            const name = document.getElementById('bannerName').value;
+            const image = document.getElementById('bannerImage').value;
+            const deeplinkBase = document.getElementById('deeplink').value;
+            const extraParam = document.getElementById('extraParam').value;
+            const enabled = document.getElementById('enabled').checked;
+            const country = document.querySelector('input[name="country"]:checked')?.value || '';
+            const section = document.getElementById('section').value;
+            const path = document.getElementById('path').value;
+            const order = document.getElementById('order').value;
+
+            let deeplink = deeplinkBase;
+            if (deeplinkBase.includes('{')) {
+                deeplink = deeplinkBase.replace(/\{.*?\}/, extraParam);
+            }
+
+            const json = {
+                id: id || "", // tomar el valor del campo ID
+                name: name,
+                image: image,
+                deeplink: deeplink,
+                enabled: enabled,
+                country: country,
+                section: section,
+                path: path,
+                order: parseInt(order, 10)
+            };
+
+            document.getElementById('jsonResult').textContent = JSON.stringify(json, null, 2);
+        }
+
+        function updateImagePreview() {
+            const imageUrl = document.getElementById('bannerImage').value;
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.innerHTML = `<img src="${imageUrl}" alt="Image Preview" style="max-width: 100%; margin-top: 10px;">`;
+        }
+
+        function copyToClipboard() {
+            const jsonText = document.getElementById('jsonResult').textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                alert('JSON copiado al portapapeles');
+            });
+        }
+
+        // Mostrar campo de texto para parámetros adicionales si es necesario
+        document.getElementById('deeplink').addEventListener('change', function () {
+            const selectedValue = this.value;
+            const extraParamInput = document.getElementById('extraParam');
+            if (selectedValue.includes('{')) {
+                extraParamInput.style.display = 'block';
+            } else {
+                extraParamInput.style.display = 'none';
+                extraParamInput.value = ''; // Limpiar el campo si no es necesario
+            }
+            updateJSON();
+        });
+
+        function editarBanner(banner) {
+            document.getElementById('bannerId').value = banner.id || '';
+            document.getElementById('bannerName').value = banner.name || '';
+            document.getElementById('bannerImage').value = banner.image || '';
+            document.getElementById('enabled').checked = !!banner.enabled;
+            document.getElementById('order').value = banner.order || '';
+            document.getElementById('section').value = banner.section || 'FEATURED';
+            document.getElementById('path').value = banner.path || 'home';
+
+            const deeplinkField = document.getElementById('deeplink');
+            const extraParamField = document.getElementById('extraParam');
+
+            // Inferir deeplink base y parámetro si aplica
+            const deepOptions = [...deeplinkField.options];
+            const matchingOption = deepOptions.find(opt => banner.deeplink.startsWith(opt.value.split('{')[0]));
+            if (matchingOption) {
+                deeplinkField.value = matchingOption.value;
+                if (matchingOption.value.includes('{')) {
+                    const param = banner.deeplink.split('/').pop(); // naive extraction
+                    extraParamField.style.display = 'block';
+                    extraParamField.value = param;
+                } else {
+                    extraParamField.style.display = 'none';
+                    extraParamField.value = '';
+                }
+            }
+
+            // País (radio)
+            const countryInput = document.querySelector(`input[name="country"][value="${banner.country}"]`);
+            if (countryInput) countryInput.checked = true;
+
+            updateImagePreview();
+            updateJSON();
+        }
+        function resetForm() {
+            document.getElementById('bannerId').value = '';
+            document.getElementById('bannerName').value = '';
+            document.getElementById('bannerImage').value = '';
+            document.getElementById('enabled').checked = false;
+            document.getElementById('order').value = '';
+
+            document.getElementById('section').value = 'FEATURED';
+            document.getElementById('path').value = 'home';
+            document.getElementById('deeplink').value = 'home';
+            document.getElementById('extraParam').value = '';
+            document.getElementById('extraParam').style.display = 'none';
+
+            // Limpiar radios de país
+            const radios = document.querySelectorAll('input[name="country"]');
+            radios.forEach(r => r.checked = false);
+
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('jsonResult').textContent = '';
+
+            updateJSON();
+        }
+
+
+
+    </script>
+</body>
+
+</html>

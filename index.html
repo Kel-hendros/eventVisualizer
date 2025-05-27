@@ -72,6 +72,7 @@
             display: flex;
             width: 100%;
             align-items: center;
+            justify-content: space-between;
         }
 
         .title h2 {
@@ -79,9 +80,27 @@
             font-size: 28px;
         }
 
-        .column {
+        .title-col {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .title-col.buscador {
             flex: 1;
-            padding: 10px;
+            max-width: 33%;
+        }
+
+        .title-col.center-title {
+            flex: 1;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .title-col.right-button {
+            flex: 1;
+            justify-content: flex-end;
+
         }
 
         /* Estilos para Inputs y Botones Generales */
@@ -126,6 +145,7 @@
 
         /* Estilos para el buscador */
         .buscador {
+            width: 100%;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
@@ -815,23 +835,35 @@
         .chip:active {
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
+        #bottonBanner a {
+            font-size: small;
+            padding: 10px;
+            max-width: 200px;
+            background-color: #4682B4;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+
+        }
     </style>
 </head>
 
 <body>
 
     <div class="title">
-        <div class="column">
+        <div class="title-col buscador">
             <div class="buscador">
                 <input type="text" id="eventCode" placeholder="Ingresa el código del evento" />
                 <button onclick="fetchEventData()">Buscar</button>
             </div>
         </div>
-        <div class="column">
+        <div class="title-col center-title">
             <h2>Visualizador de Eventos</h2>
         </div>
-        <div class="column">
-
+        <div id="bottonBanner" class="title-col right-button">
+            <a href="bannerEditor.html">Banner Manager Pro3000</a>
             <!-- Columna derecha vacía -->
         </div>
     </div>
