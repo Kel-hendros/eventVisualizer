@@ -1907,6 +1907,16 @@
                 ballContainer.appendChild(ball);
             }
 
+            // Track pointer position inside the container
+            let pointerScreenX = null, pointerScreenY = null;
+            ballContainer.addEventListener('mousemove', function (e) {
+                pointerScreenX = e.clientX;
+                pointerScreenY = e.clientY;
+            });
+            ballContainer.addEventListener('mouseleave', function () {
+                pointerScreenX = pointerScreenY = null;
+            });
+
             // Variables de física
             let posX = ballContainer.offsetWidth / 2 - 24; // 24 = mitad del font-size (48px)
             let posY = 0;
@@ -1925,6 +1935,24 @@
                 velY += gravity;
                 posX += velX;
                 posY += velY;
+
+                // Rebote si la pelota golpea al cursor desde arriba
+                if (pointerScreenX !== null && velY > 0) {
+                    const containerRect = ballContainer.getBoundingClientRect();
+                    const pointerX = pointerScreenX - containerRect.left;
+                    const pointerY = pointerScreenY - containerRect.top;
+                    const threshold = Math.abs(velY) + 2;
+                    if (
+                        pointerX >= posX &&
+                        pointerX <= posX + ball.offsetWidth &&
+                        pointerY >= posY + ball.offsetHeight &&
+                        pointerY <= posY + ball.offsetHeight + threshold
+                    ) {
+                        posY = pointerY - ball.offsetHeight;
+                        velY *= -bounceFactor;
+                        velX *= friction;
+                    }
+                }
 
                 // Rebote en el suelo con floorOffset
                 if (posY + ball.offsetHeight > containerHeight - floorOffset) {
