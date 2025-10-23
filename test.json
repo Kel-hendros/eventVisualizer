@@ -1,0 +1,237 @@
+[
+  {
+    "required": false,
+    "label": "Evento",
+    "placeholder": "",
+    "name": "event_name",
+    "type": "READONLY"
+  },
+  {
+    "required": true,
+    "label": "Tipo de carrera",
+    "placeholder": "Selecciona la distancia",
+    "name": "race_type",
+    "type": "SELECT",
+    "options": [
+      { "label": "10K", "value": "10K" },
+      { "label": "21K (Media Maratón)", "value": "21K" },
+      { "label": "42K (Maratón)", "value": "42K" }
+    ]
+  },
+  {
+    "required": true,
+    "showInTicket": true,
+    "label": "Nombre completo",
+    "placeholder": "Ingresa tu nombre y apellido",
+    "name": "full_name",
+    "type": "TEXT",
+    "minLength": 3,
+    "maxLength": 120
+  },
+  {
+    "required": true,
+    "label": "Email",
+    "placeholder": "tunombre@correo.com",
+    "name": "email",
+    "type": "EMAIL",
+    "maxLength": 120
+  },
+  {
+    "required": true,
+    "label": "Teléfono",
+    "placeholder": "+54 11 1234 5678",
+    "name": "phone",
+    "type": "PHONE"
+  },
+  {
+    "required": true,
+    "label": "Documento / Pasaporte",
+    "placeholder": "Número de documento",
+    "name": "document_id",
+    "type": "TEXT",
+    "minLength": 6,
+    "maxLength": 20
+  },
+  {
+    "required": true,
+    "label": "Nacionalidad",
+    "placeholder": "Selecciona tu país",
+    "name": "nationality",
+    "type": "SELECT",
+    "options": [
+      { "label": "Argentina", "value": "AR" },
+      { "label": "Chile", "value": "CL" },
+      { "label": "Uruguay", "value": "UY" },
+      { "label": "Brasil", "value": "BR" },
+      { "label": "Otro", "value": "OT" }
+    ]
+  },
+  {
+    "required": true,
+    "label": "Fecha de nacimiento",
+    "placeholder": "AAAA-MM-DD",
+    "name": "BIRTHDATE",
+    "type": "DATE"
+  },
+  {
+    "required": true,
+    "label": "Género",
+    "placeholder": "Selecciona tu género",
+    "name": "gender",
+    "type": "SELECT",
+    "options": [
+      { "label": "Masculino", "value": "M" },
+      { "label": "Femenino", "value": "F" },
+      { "label": "No binario / X", "value": "X" }
+    ]
+  },
+  {
+    "required": true,
+    "label": "Categoría",
+    "placeholder": "Selecciona tu categoría",
+    "name": "category",
+    "type": "SELECT",
+    "options": [
+      {
+        "label": "10K General Masculino (16+)",
+        "value": "10k_m_general",
+        "validations": [
+          { "name": "race_type", "value": "10K" },
+          { "name": "gender", "value": "M" },
+          { "name": "birthdate", "min": 16, "targetDate": "2025-12-07" }
+        ]
+      },
+      {
+        "label": "10K General Femenino (16+)",
+        "value": "10k_f_general",
+        "validations": [
+          { "name": "race_type", "value": "10K" },
+          { "name": "gender", "value": "F" },
+          { "name": "birthdate", "min": 16, "targetDate": "2025-12-07" }
+        ]
+      },
+      {
+        "label": "21K 18–34 Masculino",
+        "value": "21k_m_18_34",
+        "validations": [
+          { "name": "race_type", "value": "21K" },
+          { "name": "gender", "value": "M" },
+          { "name": "birthdate", "min": 18, "max": 34, "targetDate": "2025-12-07" }
+        ]
+      },
+      {
+        "label": "21K 35–49 Femenino",
+        "value": "21k_f_35_49",
+        "validations": [
+          { "name": "race_type", "value": "21K" },
+          { "name": "gender", "value": "F" },
+          { "name": "birthdate", "min": 35, "max": 49, "targetDate": "2025-12-07" }
+        ]
+      },
+      {
+        "label": "42K General No Binario (20+)",
+        "value": "42k_x_general",
+        "validations": [
+          { "name": "race_type", "value": "42K" },
+          { "name": "gender", "value": "X" },
+          { "name": "birthdate", "min": 20, "targetDate": "2025-12-07" }
+        ]
+      }
+    ]
+  },
+  {
+    "required": false,
+    "label": "¿Participas con silla de ruedas?",
+    "placeholder": "",
+    "name": "wheelchair",
+    "type": "CHECKBOX"
+  },
+  {
+    "required": true,
+    "label": "Ola de largada",
+    "placeholder": "Selecciona tu ola",
+    "name": "start_wave",
+    "type": "SELECT",
+    "options": [
+      { "label": "General – Ola 1 (más rápida)", "value": "wave_1" },
+      { "label": "General – Ola 2", "value": "wave_2" },
+      {
+        "label": "Atletas en silla de ruedas",
+        "value": "wave_wheelchair",
+        "validations": [
+          { "name": "wheelchair", "value": true }
+        ]
+      }
+    ]
+  },
+  {
+    "required": false,
+    "label": "Marca personal (10K) en minutos",
+    "placeholder": "Ej.: 52",
+    "name": "pb_10k_minutes",
+    "type": "NUMBER"
+  },
+  {
+    "required": false,
+    "showInTicket": true,
+    "label": "Club / Equipo",
+    "placeholder": "Nombre del club",
+    "name": "team_name",
+    "type": "TEXT",
+    "maxLength": 80
+  },
+  {
+    "required": false,
+    "label": "Perfil médico (URL)",
+    "placeholder": "https://...",
+    "name": "medical_profile_url",
+    "type": "URL"
+  },
+  {
+    "required": true,
+    "canEdit": true,
+    "label": "Talle de remera",
+    "placeholder": "",
+    "name": "tshirt_size",
+    "type": "RADIO_GROUP",
+    "options": [
+      { "label": "XS", "value": "XS" },
+      { "label": "S", "value": "S" },
+      { "label": "M", "value": "M" },
+      { "label": "L", "value": "L" },
+      { "label": "XL", "value": "XL" },
+      { "label": "XXL", "value": "XXL" }
+    ]
+  },
+  {
+    "required": true,
+    "canEdit": true,
+    "label": "Turno de retiro de kit",
+    "placeholder": "Selecciona día y hora",
+    "name": "kit_pickup_slot",
+    "type": "DATETIME"
+  },
+  {
+    "required": false,
+    "label": "Contacto de emergencia (Nombre)",
+    "placeholder": "Nombre y apellido",
+    "name": "emergency_contact_name",
+    "type": "TEXT",
+    "minLength": 3,
+    "maxLength": 120
+  },
+  {
+    "required": false,
+    "label": "Contacto de emergencia (Tel.)",
+    "placeholder": "+54 11 1234 5678",
+    "name": "emergency_contact_phone",
+    "type": "PHONE"
+  },
+  {
+    "required": true,
+    "label": "Acepto Términos y Condiciones",
+    "placeholder": "",
+    "name": "terms",
+    "type": "CHECKBOX"
+  }
+]

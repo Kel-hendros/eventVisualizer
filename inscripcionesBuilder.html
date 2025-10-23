@@ -59,7 +59,43 @@
             position: sticky;
             top: 1.5rem;
             align-self: flex-start;
+
+            /* carcaza beige amarillenta */
+            background: linear-gradient(145deg, #d9d3c3 0%, #cfc8b5 40%, #bfb79d 100%);
+            border-radius: 18px;
+            border: 2px solid #a79f85;
+
+            /* efecto de profundidad y reflejo */
+            box-shadow:
+                inset 0 2px 4px rgba(255, 255, 255, 0.5),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.15),
+                0 8px 20px rgba(0, 0, 0, 0.25);
+
+            /* un padding un poco mayor para que “respire” el contenido */
+            padding: 2rem;
+
+            /* tip opcional: tipografía o ícono retro */
+            font-family: "Fira Code", "SFMono-Regular", Menlo, Consolas, monospace;
         }
+
+
+        .output-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.03"/></svg>');
+            border-radius: 18px;
+            mix-blend-mode: multiply;
+        }
+
+        /* opcional: un marco oscuro que simula la pantalla embebida */
+        .output-panel .readonly {
+            border: 4px inset #7efd91;
+            background-color: #001900;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.23);
+        }
+
 
         h2 {
             margin-top: 0;
@@ -117,13 +153,7 @@
             gap: 1rem;
         }
 
-        .actions-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            justify-content: flex-end;
-            margin-top: 0.5rem;
-        }
+
 
         .boolean-settings {
             display: grid;
@@ -168,6 +198,64 @@
             transform: translateY(-1px);
             box-shadow: 0 8px 15px rgba(11, 114, 133, 0.2);
         }
+
+        .output-panel .actions-row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-around;
+            margin-top: 0.5rem;
+        }
+
+        .output-panel .actions-row button {
+            background: linear-gradient(180deg, #d9d3c3 0%, #cfc8b5 100%);
+            color: #2c2c2c;
+            border: 2px solid #a79f85;
+            border-radius: 6px;
+            padding: 0.5rem .7rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                0 2px 4px rgba(0, 0, 0, 0.4);
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
+            cursor: pointer;
+        }
+
+        /* Efecto hover: brillo arriba, sensación de relieve */
+        .output-panel .actions-row button:hover {
+            background: linear-gradient(180deg, #e2dcc9 0%, #cfc8b5 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                0 3px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Efecto “hundido” al presionar */
+        .output-panel .actions-row button:active {
+            background: linear-gradient(180deg, #cfc8b5 0%, #bfb79d 100%);
+            transform: translateY(2px);
+            box-shadow:
+                inset 0 2px 3px rgba(0, 0, 0, 0.4),
+                0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Botón rojo (como el de apagado o reset) */
+        .output-panel #clear-json {
+            background: linear-gradient(180deg, #d98080 0%, #c76868 100%);
+            border-color: #9b3a3a;
+            color: #fff;
+        }
+
+        .output-panel #clear-json:hover {
+            background: linear-gradient(180deg, #e78d8d 0%, #d36b6b 100%);
+        }
+
+        .output-panel #clear-json:active {
+            background: linear-gradient(180deg, #c76868 0%, #b55656 100%);
+        }
+
+
 
         .btn.secondary {
             background: #e2e8f0;
@@ -407,16 +495,36 @@
         pre,
         textarea.readonly {
             width: 100%;
-            min-height: 420px;
-            border-radius: 16px;
-            border: 1px solid #cbd5e1;
-            background: #0f172a;
-            color: #e2e8f0;
+            min-height: 550px;
+            border-radius: 8px;
+            /* border: 1px solid #0f0; */
+            background-color: #001900;
+            /* verde muy oscuro */
+            color: #00ff66;
+            /* verde fósforo */
             padding: 1rem;
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             font-family: "Fira Code", "SFMono-Regular", Menlo, Consolas, monospace;
             resize: vertical;
+            text-shadow: 0 0 8px #00ff66;
+            box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.978);
+            caret-color: #00ff66;
+            background-image:
+                linear-gradient(180deg, #002000 0%, #001400 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.015"/></svg>');
+            background-blend-mode: normal, overlay;
         }
+
+        /* Placeholder - moderno */
+        textarea.readonly::placeholder {
+            color: #00ff66;
+            /* verde fósforo */
+            opacity: .4;
+            /* evita el grisado en Firefox */
+            text-shadow: 0 0 8px #00ff66;
+            /* opcional: glow */
+        }
+
 
         .notification {
             margin: 0.5rem 0 0;
@@ -584,12 +692,13 @@
         </section>
 
         <aside class="panel output-panel" aria-label="JSON resultante">
-            <h2>JSON generado</h2>
+            <!-- <h2>JSON generado</h2> -->
             <textarea id="json-output" class="readonly" spellcheck="false"
                 placeholder="Aquí verás el JSON generado. También puedes pegar uno existente y presionar “Cargar JSON”."></textarea>
             <div class="actions-row" style="margin-top:1rem;">
                 <button id="load-json" class="btn secondary" type="button">Cargar JSON</button>
                 <button id="copy-json" class="btn secondary" type="button">Copiar JSON</button>
+                <button id="clear-json" class="btn secondary" type="button">Limpiar JSON</button>
             </div>
             <p id="copy-message" class="notification info"></p>
         </aside>
@@ -618,6 +727,7 @@
         const jsonOutput = document.getElementById("json-output");
         const loadButton = document.getElementById("load-json");
         const copyButton = document.getElementById("copy-json");
+        const clearButton = document.getElementById("clear-json");
         const copyMessage = document.getElementById("copy-message");
 
         const fields = [];
@@ -916,9 +1026,6 @@
 
                 if (field.placeholder) {
                     baseField.placeholder = field.placeholder;
-                }
-                if (field.helpText) {
-                    baseField.helpText = field.helpText;
                 }
 
                 if (Array.isArray(options)) {
@@ -1343,6 +1450,14 @@
             } catch (error) {
                 showMessage(copyMessage, "No se pudo copiar automáticamente. Selecciona y copia manualmente.", "error");
             }
+        });
+
+        clearButton.addEventListener("click", () => {
+            fields.length = 0;
+            resetForm();
+            renderFields();
+            updateJsonOutput();
+            showMessage(copyMessage, "JSON limpio y formulario reiniciado.");
         });
 
         toggleOptionsSection(typeSelect.value, false);
