@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diseñador de Formularios de Inscripción</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f4f6;
+            color: #1f2933;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, #0b7285, #087f8c);
+            color: #fff;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: clamp(1.6rem, 2vw, 2rem);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .panel {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            padding: 1.75rem;
+            width: min(680px, 100%);
+        }
+
+        .output-panel {
+            width: min(420px, 100%);
+            position: sticky;
+            top: 1.5rem;
+            align-self: flex-start;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            color: #0b7285;
+        }
+
+        form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        textarea,
+        select {
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.97rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #0b7285;
+            box-shadow: 0 0 0 3px rgba(11, 114, 133, 0.2);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .horizontal {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .actions-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
+
+        .boolean-settings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.4rem;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+
+        .boolean-settings label {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .boolean-settings input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.25s ease;
+            background: #0b7285;
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 15px rgba(11, 114, 133, 0.2);
+        }
+
+        .btn.secondary {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn.secondary:hover {
+            background: #cbd5e1;
+            box-shadow: none;
+        }
+
+        .options-block {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: #f8fafc;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .option-row {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 0.85rem;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .option-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .option-controls .remove-option {
+            background: #ffe4e6;
+            color: #be123c;
+        }
+
+        .option-controls .remove-option:hover {
+            background: #fecdd3;
+        }
+
+        .validations-panel {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .validation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .validation-row {
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 0.75rem;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .validation-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .validation-header .remove-validation {
+            background: #ffe4e6;
+            color: #be123c;
+        }
+
+        .validation-header .remove-validation:hover {
+            background: #fecdd3;
+        }
+
+        .validation-fields {
+            display: grid;
+            gap: 0.6rem;
+        }
+
+        .validation-value-fields,
+        .validation-age-fields {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .validation-age-fields {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        }
+
+        .validation-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .fields-list {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .field-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1.1rem 1.35rem;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+            display: flex;
+            justify-content: space-between;
+            gap: 1.25rem;
+            align-items: stretch;
+            margin-bottom: 1rem;
+        }
+
+        .field-card h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #0f172a;
+        }
+
+        .field-meta {
+            margin: 0.35rem 0 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .field-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .field-meta strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .field-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(44px, 1fr));
+            grid-auto-rows: 44px;
+            gap: 0.5rem;
+            align-content: start;
+            min-width: 120px;
+        }
+
+        .small-btn {
+            border: none;
+            background: #e2e8f0;
+            color: #0f172a;
+            border-radius: 999px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .small-btn:hover {
+            background: #c8d3e1;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            border: none;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: #1e293b;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+            padding: 0.35rem 0.6rem;
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .action-btn:hover {
+            background: #c7d2fe;
+            transform: translateY(-1px);
+        }
+
+        .action-btn:disabled,
+        .action-btn[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #e2e8f0;
+            transform: none;
+        }
+
+        .action-btn.danger {
+            background: #fee2e2;
+            color: #b42318;
+            grid-column: 1 / span 2;
+        }
+
+        .action-btn.danger:hover {
+            background: #fecaca;
+        }
+
+        pre,
+        textarea.readonly {
+            width: 100%;
+            min-height: 420px;
+            border-radius: 16px;
+            border: 1px solid #cbd5e1;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1rem;
+            font-size: 0.92rem;
+            font-family: "Fira Code", "SFMono-Regular", Menlo, Consolas, monospace;
+            resize: vertical;
+        }
+
+        .notification {
+            margin: 0.5rem 0 0;
+            padding: 0.6rem 0.9rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification.info {
+            background: #ecfeff;
+            color: #155e75;
+        }
+
+        .notification.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background-color: #3d3d3d;
+            color: #fff;
+            padding-inline: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+
+        }
+
+        header a {
+            color: black;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: .8em;
+        }
+
+        @media (max-width: 1080px) {
+            main {
+                padding: 1.5rem;
+            }
+
+            .output-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1.25rem;
+            }
+
+            main {
+                padding: 1.25rem;
+            }
+
+            .panel {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <span></span>
+        <h1>Inscription Form Builder 4000</h1>
+        <a href="index.html">↩️ Volver a Eventos</a>
+    </header>
+    <main>
+        <section class="panel" aria-label="Constructor de campos">
+            <h2>Configurar campo</h2>
+            <form id="field-form">
+                <div class="field-group">
+                    <label for="field-label">Etiqueta a mostrar *</label>
+                    <input id="field-label" type="text" placeholder="Ej: Nombre completo" required />
+                </div>
+                <div class="field-group">
+                    <label for="field-name">Identificador (name) *</label>
+                    <input id="field-name" type="text" placeholder="Ej: nombreCompleto" required />
+                </div>
+                <div class="boolean-settings">
+                    <label for="field-required">
+                        <input id="field-required" type="checkbox" />
+                        Obligatorio
+                    </label>
+                    <label for="field-show-in-ticket">
+                        <input id="field-show-in-ticket" type="checkbox" />
+                        Mostrar campo en el ticket
+                    </label>
+                    <label for="field-can-edit">
+                        <input id="field-can-edit" type="checkbox" />
+                        Editable luego de la compra
+                    </label>
+                </div>
+                <div class="horizontal">
+                    <div class="field-group">
+                        <label for="field-type">Tipo de campo *</label>
+                        <select id="field-type" required>
+                            <option value="readonly">Solo lectura</option>
+                            <option value="text">Texto</option>
+                            <option value="number">Número</option>
+                            <option value="email">Correo electrónico</option>
+                            <option value="phone">Teléfono</option>
+                            <option value="datetime">Fecha y hora</option>
+                            <option value="date">Fecha</option>
+                            <option value="time">Hora</option>
+                            <option value="select">Lista desplegable</option>
+                            <option value="checkbox">Casilla de verificación</option>
+                            <option value="radio_group">Botones de opciones</option>
+                            <!-- <option value="file">Archivo (FILE)</option> -->
+                            <option value="url">Enlace</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="field-placeholder">Placeholder</label>
+                        <input id="field-placeholder" type="text" placeholder="Ej: Introduce tu nombre" />
+                    </div>
+                </div>
+                <div class="horizontal hidden" id="length-constraints">
+                    <div class="field-group">
+                        <label for="field-min-length">Min. caracteres</label>
+                        <input id="field-min-length" type="number" min="0" placeholder="Ej: 3" />
+                    </div>
+                    <div class="field-group">
+                        <label for="field-max-length">Max. caracteres</label>
+                        <input id="field-max-length" type="number" min="1" placeholder="Ej: 120" />
+                    </div>
+                </div>
+
+                <div id="options-section" class="options-block hidden" aria-live="polite">
+                    <div class="field-group">
+                        <label>Opciones</label>
+                        <p style="margin:0; font-size:0.85rem; color:#64748b;">Define las opciones que verá el usuario.
+                            Cada
+                            opción necesita etiqueta y valor. Puedes sumar validaciones condicionales basadas en las
+                            respuestas de otros campos.</p>
+                    </div>
+                    <div id="options-list"></div>
+                    <button id="add-option" class="btn secondary" type="button">Agregar opción</button>
+                </div>
+                <div class="actions-row">
+                    <button id="cancel-edit" class="btn secondary" type="button" hidden>Cancelar</button>
+                    <button id="submit-field" class="btn" type="submit">Agregar campo</button>
+                </div>
+                <p id="form-message" class="notification"></p>
+            </form>
+
+            <div class="fields-list" aria-live="polite">
+                <h2>Campos del formulario</h2>
+                <p id="empty-state" style="margin:0; font-size:0.9rem; color:#64748b;">Aún no hay campos. Agrega el
+                    primero para comenzar.</p>
+                <div id="fields-container"></div>
+            </div>
+        </section>
+
+        <aside class="panel output-panel" aria-label="JSON resultante">
+            <h2>JSON generado</h2>
+            <textarea id="json-output" class="readonly" spellcheck="false"
+                placeholder="Aquí verás el JSON generado. También puedes pegar uno existente y presionar “Cargar JSON”."></textarea>
+            <div class="actions-row" style="margin-top:1rem;">
+                <button id="load-json" class="btn secondary" type="button">Cargar JSON</button>
+                <button id="copy-json" class="btn secondary" type="button">Copiar JSON</button>
+            </div>
+            <p id="copy-message" class="notification info"></p>
+        </aside>
+    </main>
+
+    <script>
+        const fieldForm = document.getElementById("field-form");
+        const labelInput = document.getElementById("field-label");
+        const nameInput = document.getElementById("field-name");
+        const typeSelect = document.getElementById("field-type");
+        const placeholderInput = document.getElementById("field-placeholder");
+        const lengthConstraintsRow = document.getElementById("length-constraints");
+        const minLengthInput = document.getElementById("field-min-length");
+        const maxLengthInput = document.getElementById("field-max-length");
+        const requiredInput = document.getElementById("field-required");
+        const showInTicketInput = document.getElementById("field-show-in-ticket");
+        const canEditInput = document.getElementById("field-can-edit");
+        const optionsSection = document.getElementById("options-section");
+        const optionsList = document.getElementById("options-list");
+        const addOptionButton = document.getElementById("add-option");
+        const fieldsContainer = document.getElementById("fields-container");
+        const emptyState = document.getElementById("empty-state");
+        const submitButton = document.getElementById("submit-field");
+        const cancelEditButton = document.getElementById("cancel-edit");
+        const formMessage = document.getElementById("form-message");
+        const jsonOutput = document.getElementById("json-output");
+        const loadButton = document.getElementById("load-json");
+        const copyButton = document.getElementById("copy-json");
+        const copyMessage = document.getElementById("copy-message");
+
+        const fields = [];
+        let editingFieldId = null;
+        const fieldTypesWithOptions = new Set(["select", "radio_group"]);
+        const fieldTypesWithLengths = new Set(["text", "number"]);
+        const generateId = () => (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+            ? crypto.randomUUID()
+            : `field-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+
+        function slugify(text) {
+            return text
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9]+/g, "_")
+                .replace(/^_+|_+$/g, "")
+                .replace(/_{2,}/g, "_");
+        }
+
+        function showMessage(target, text, type = "info") {
+            target.textContent = text;
+            target.className = `notification show ${type}`;
+            if (text) {
+                setTimeout(() => {
+                    target.className = "notification";
+                    target.textContent = "";
+                }, type === "error" ? 4000 : 2500);
+            }
+        }
+
+        function toggleOptionsSection(type, ensureRow = true) {
+            const needsOptions = fieldTypesWithOptions.has(type);
+            optionsSection.classList.toggle("hidden", !needsOptions);
+            if (needsOptions && ensureRow && optionsList.childElementCount === 0) {
+                addOptionRow();
+            }
+            if (!needsOptions) {
+                optionsList.innerHTML = "";
+            }
+        }
+
+        function toggleLengthConstraints(type, preserveValues = false) {
+            const needsLengths = fieldTypesWithLengths.has(type);
+            lengthConstraintsRow.classList.toggle("hidden", !needsLengths);
+            if (!needsLengths && !preserveValues) {
+                minLengthInput.value = "";
+                maxLengthInput.value = "";
+            }
+        }
+
+        function determineValidationType(validation = {}) {
+            if (!validation) return "value";
+            const hasRangeKeys = validation.min !== undefined || validation.max !== undefined || validation.targetDate !== undefined;
+            return hasRangeKeys ? "age" : "value";
+        }
+
+        function syncValidationRow(row) {
+            const type = row.querySelector(".validation-type").value;
+            row.dataset.validationType = type;
+            row.querySelector(".validation-value-fields").classList.toggle("hidden", type !== "value");
+            row.querySelector(".validation-age-fields").classList.toggle("hidden", type !== "age");
+        }
+
+        function addValidationRow(list, validation = {}) {
+            const type = determineValidationType(validation);
+            const row = document.createElement("div");
+            row.className = "validation-row";
+            row.dataset.validationType = type;
+            row.innerHTML = `
+                <div class="validation-header">
+                    <select class="validation-type">
+                        <option value="value">Comparar valor</option>
+                        <option value="age">Rango de edades</option>
+                    </select>
+                    <button type="button" class="small-btn remove-validation" data-action="remove-validation">Eliminar</button>
+                </div>
+                <div class="validation-fields">
+                    <input type="text" class="validation-name" placeholder="Campo relacionado (name)" value="${validation.name ?? ""}" />
+                    <div class="validation-value-fields ${type === "value" ? "" : "hidden"}">
+                        <input type="text" class="validation-value" placeholder="Valor requerido" value="${validation.value ?? ""}" />
+                    </div>
+                    <div class="validation-age-fields ${type === "age" ? "" : "hidden"}">
+                        <input type="number" class="validation-min" placeholder="Edad mínima" value="${validation.min ?? ""}" />
+                        <input type="number" class="validation-max" placeholder="Edad máxima" value="${validation.max ?? ""}" />
+                        <input type="date" class="validation-target" value="${validation.targetDate ?? ""}" />
+                    </div>
+                </div>
+            `;
+            row.querySelector(".validation-type").value = type;
+            syncValidationRow(row);
+            list.appendChild(row);
+        }
+
+        function updateOptionValidationCount(optionRow) {
+            if (!optionRow) return;
+            const count = optionRow.querySelectorAll(".validation-row").length;
+            const toggleButton = optionRow.querySelector("[data-action='toggle-validations']");
+            if (toggleButton) {
+                toggleButton.textContent = `Validaciones (${count})`;
+            }
+        }
+
+        function addOptionRow(option = { label: "", value: "", validations: [] }) {
+            const row = document.createElement("div");
+            row.className = "option-row";
+            row.innerHTML = `
+                <div class="option-main">
+                    <input type="text" class="option-label" placeholder="Etiqueta visible" value="${option.label || ""}" />
+                    <input type="text" class="option-value" placeholder="Valor" value="${option.value || ""}" />
+                    <div class="option-controls">
+                        <button type="button" class="small-btn secondary" data-action="toggle-validations">Validaciones (0)</button>
+                        <button type="button" class="small-btn remove-option" data-action="remove-option">Eliminar opción</button>
+                    </div>
+                </div>
+                <div class="validations-panel hidden">
+                    <div class="validation-list"></div>
+                    <div class="validation-actions">
+                        <button type="button" class="small-btn secondary" data-action="add-validation">Agregar validación</button>
+                    </div>
+                </div>
+            `;
+            const list = row.querySelector(".validation-list");
+            (option.validations || []).forEach(validation => addValidationRow(list, validation));
+            if (option.validations && option.validations.length) {
+                row.querySelector(".validations-panel").classList.remove("hidden");
+            }
+            updateOptionValidationCount(row);
+            optionsList.appendChild(row);
+        }
+
+        function resetForm() {
+            fieldForm.reset();
+            optionsList.innerHTML = "";
+            toggleOptionsSection(typeSelect.value, false);
+            toggleLengthConstraints(typeSelect.value, false);
+            submitButton.textContent = "Agregar campo";
+            cancelEditButton.hidden = true;
+            editingFieldId = null;
+        }
+
+        function gatherOptions() {
+            const rows = [...optionsList.querySelectorAll(".option-row")];
+            if (rows.length === 0) {
+                throw new Error("Agrega al menos una opción.");
+            }
+
+            return rows.map(row => {
+                const label = row.querySelector(".option-label").value.trim();
+                const value = row.querySelector(".option-value").value.trim();
+                if (!label || !value) {
+                    throw new Error("Completa etiqueta y valor en todas las opciones.");
+                }
+
+                const option = { label, value };
+                const validations = [...row.querySelectorAll(".validation-row")].map(validationRow => {
+                    const type = validationRow.dataset.validationType || "value";
+                    const name = validationRow.querySelector(".validation-name").value.trim();
+                    if (!name) {
+                        throw new Error("Cada validación necesita el campo relacionado (name).");
+                    }
+
+                    if (type === "value") {
+                        const expected = validationRow.querySelector(".validation-value").value.trim();
+                        if (!expected) {
+                            throw new Error(`El campo "${label}" requiere un valor esperado en sus validaciones.`);
+                        }
+                        const lower = expected.toLowerCase();
+                        if (lower === "true") {
+                            return { name, value: true };
+                        }
+                        if (lower === "false") {
+                            return { name, value: false };
+                        }
+                        return { name, value: expected };
+                    } else {
+                        const minRaw = validationRow.querySelector(".validation-min").value.trim();
+                        const maxRaw = validationRow.querySelector(".validation-max").value.trim();
+                        const targetDate = validationRow.querySelector(".validation-target").value.trim();
+                        const hasMin = minRaw !== "";
+                        const hasMax = maxRaw !== "";
+
+                        if (!hasMin && !hasMax) {
+                            throw new Error(`El campo "${label}" necesita al menos una edad mínima o máxima para la validación por rango.`);
+                        }
+
+                        const validation = { name };
+                        if (hasMin) {
+                            const min = Number(minRaw);
+                            if (Number.isNaN(min)) {
+                                throw new Error("La edad mínima debe ser numérica.");
+                            }
+                            validation.min = min;
+                        }
+                        if (hasMax) {
+                            const max = Number(maxRaw);
+                            if (Number.isNaN(max)) {
+                                throw new Error("La edad máxima debe ser numérica.");
+                            }
+                            validation.max = max;
+                        }
+                        if (targetDate) {
+                            validation.targetDate = targetDate;
+                        }
+                        return validation;
+                    }
+                });
+
+                if (validations.length) {
+                    option.validations = validations;
+                }
+
+                return option;
+            });
+        }
+
+        function normalizeFieldType(type) {
+            if (!type) return "";
+            const normalized = String(type).toLowerCase();
+            const allowed = new Set([
+                "text",
+                "email",
+                "number",
+                "date",
+                "select",
+                "readonly",
+                "phone",
+                "checkbox",
+                "datetime",
+                "time",
+                "file",
+                "url",
+                "radio_group"
+            ]);
+            if (normalized === "radio") return "radio_group";
+            if (normalized === "tel") return "phone";
+            if (normalized === "textarea") return "text";
+            if (!allowed.has(normalized)) {
+                throw new Error(`Tipo de campo no soportado: ${type}`);
+            }
+            return normalized;
+        }
+
+        function deepClone(value) {
+            if (typeof structuredClone === "function") {
+                try {
+                    return structuredClone(value);
+                } catch {
+                    // fallback to JSON
+                }
+            }
+            return JSON.parse(JSON.stringify(value));
+        }
+
+        function importFieldsFromJson(raw) {
+            let parsed;
+            try {
+                parsed = JSON.parse(raw);
+            } catch (error) {
+                throw new Error("El JSON ingresado no es válido.");
+            }
+
+            if (parsed && !Array.isArray(parsed) && typeof parsed === "object") {
+                if (Array.isArray(parsed.fields)) {
+                    parsed = parsed.fields;
+                } else {
+                    parsed = [parsed];
+                }
+            }
+
+            if (!Array.isArray(parsed)) {
+                throw new Error("El JSON debe ser un arreglo de campos o un objeto con la propiedad \"fields\".");
+            }
+
+            const imported = parsed.map((field, index) => {
+                if (!field || typeof field !== "object") {
+                    throw new Error(`El campo en la posición ${index + 1} no tiene un formato válido.`);
+                }
+
+                const { type, options, ...rest } = field;
+                const normalizedType = normalizeFieldType(type);
+
+                if (!rest.label || !rest.name || !normalizedType) {
+                    throw new Error(`El campo "${rest.label ?? rest.name ?? `#${index + 1}`}" necesita label, name y type.`);
+                }
+
+                const baseField = {
+                    ...deepClone(rest),
+                    type: normalizedType,
+                    required: Boolean(field.required),
+                    showInTicket: Boolean(field.showInTicket),
+                    canEdit: Boolean(field.canEdit),
+                    id: generateId()
+                };
+
+                if (field.placeholder) {
+                    baseField.placeholder = field.placeholder;
+                }
+                if (field.helpText) {
+                    baseField.helpText = field.helpText;
+                }
+
+                if (Array.isArray(options)) {
+                    baseField.options = options.map((option, optionIndex) => {
+                        if (!option || typeof option !== "object") {
+                            throw new Error(`La opción ${optionIndex + 1} del campo "${rest.label}" no es válida.`);
+                        }
+                        if (!option.label || !option.value) {
+                            throw new Error(`La opción ${optionIndex + 1} del campo "${rest.label}" necesita label y value.`);
+                        }
+                        const normalizedOption = deepClone(option);
+                        if (Array.isArray(normalizedOption.validations)) {
+                            normalizedOption.validations = normalizedOption.validations.map(validation => deepClone(validation));
+                        }
+                        return normalizedOption;
+                    });
+                }
+
+                if (fieldTypesWithLengths.has(baseField.type)) {
+                    if (field.minLength !== undefined && field.minLength !== null && field.minLength !== "") {
+                        const parsedMin = Number(field.minLength);
+                        if (Number.isFinite(parsedMin)) {
+                            baseField.minLength = parsedMin;
+                        }
+                    }
+                    if (field.maxLength !== undefined && field.maxLength !== null && field.maxLength !== "") {
+                        const parsedMax = Number(field.maxLength);
+                        if (Number.isFinite(parsedMax)) {
+                            baseField.maxLength = parsedMax;
+                        }
+                    }
+                }
+
+                return baseField;
+            });
+
+            fields.length = 0;
+            fields.push(...imported);
+            renderFields();
+            updateJsonOutput();
+            resetForm();
+        }
+
+        function prepareFieldPayload() {
+            const label = labelInput.value.trim();
+            const name = nameInput.value.trim();
+
+            if (!label || !name) {
+                throw new Error("Etiqueta e identificador son obligatorios.");
+            }
+
+            const duplicate = fields.some(field =>
+                field.name === name && field.id !== editingFieldId
+            );
+            if (duplicate) {
+                throw new Error(`Ya existe un campo con el identificador "${name}".`);
+            }
+
+            const payload = {
+                id: editingFieldId ?? generateId(),
+                label,
+                name,
+                type: typeSelect.value,
+                required: requiredInput.checked,
+                showInTicket: showInTicketInput.checked,
+                canEdit: canEditInput.checked
+            };
+
+            const placeholder = placeholderInput.value.trim();
+            if (placeholder) {
+                payload.placeholder = placeholder;
+            }
+
+
+
+            if (fieldTypesWithLengths.has(payload.type)) {
+                const minRaw = minLengthInput.value.trim();
+                const maxRaw = maxLengthInput.value.trim();
+                let minVal;
+                let maxVal;
+
+                if (minRaw !== "") {
+                    minVal = Number(minRaw);
+                    if (!Number.isFinite(minVal) || minVal < 0 || !Number.isInteger(minVal)) {
+                        throw new Error("El mínimo debe ser un entero mayor o igual a 0.");
+                    }
+                    payload.minLength = minVal;
+                }
+
+                if (maxRaw !== "") {
+                    maxVal = Number(maxRaw);
+                    if (!Number.isFinite(maxVal) || maxVal < 0 || !Number.isInteger(maxVal)) {
+                        throw new Error("El máximo debe ser un entero mayor o igual a 0.");
+                    }
+                    payload.maxLength = maxVal;
+                }
+
+                if (minVal !== undefined && maxVal !== undefined && minVal > maxVal) {
+                    throw new Error("El mínimo no puede ser mayor que el máximo.");
+                }
+            }
+
+            if (fieldTypesWithOptions.has(payload.type)) {
+                payload.options = gatherOptions();
+            }
+
+            return payload;
+        }
+
+        function updateFields(payload) {
+            const wasEditing = Boolean(editingFieldId);
+            if (wasEditing) {
+                const index = fields.findIndex(field => field.id === editingFieldId);
+                fields.splice(index, 1, payload);
+            } else {
+                fields.push(payload);
+            }
+            renderFields();
+            updateJsonOutput();
+            resetForm();
+            showMessage(formMessage, `Campo ${wasEditing ? "actualizado" : "agregado"} correctamente.`);
+        }
+
+        function renderFields() {
+            fieldsContainer.innerHTML = "";
+            if (fields.length === 0) {
+                emptyState.hidden = false;
+                return;
+            }
+            emptyState.hidden = true;
+            fields.forEach((field, index) => {
+                const card = document.createElement("article");
+                card.className = "field-card";
+                card.dataset.fieldId = field.id;
+                card.innerHTML = `
+                    <div class="field-details">
+                        <h3>${field.label}</h3>
+                        <p class="field-meta">
+                            <strong>Nombre del campo:</strong> <code>${field.name}</code>
+                        </p>
+                        <p class="field-meta">
+                            <strong>Tipo:</strong> ${String(field.type).toUpperCase()} | <strong>Obligatorio:</strong> ${field.required ? "Si" : "No"}
+                        </p>
+                        <p class="field-meta">
+                            Mostrar en el ticket: ${field.showInTicket ? "✅" : "⛔"} | Editable: ${field.canEdit ? "✅" : "⛔"}
+                        </p>
+                        ${field.placeholder ? `<p class="field-meta">Placeholder: "${field.placeholder}"</p>` : ""}
+                        ${fieldTypesWithLengths.has(field.type) && (field.minLength !== undefined || field.maxLength !== undefined)
+                        ? `<p class="field-meta">Longitud${field.minLength !== undefined ? ` mínima ${field.minLength}` : ""}${field.maxLength !== undefined ? `${field.minLength !== undefined ? " ·" : ""} máxima ${field.maxLength}` : ""}</p>`
+                        : ""}
+                        ${field.options ? `<p class="field-meta">Opciones: ${field.options.length}</p>` : ""}
+                    </div>
+                    <div class="field-actions" role="group" aria-label="Acciones para ${field.label}">
+                        <button class="action-btn" data-action="move-up" title="Mover hacia arriba" aria-label="Mover hacia arriba" ${index === 0 ? "disabled" : ""}>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 5l-5 5m5-5l5 5M12 5v14" />
+                            </svg>
+                        </button>
+                        <button class="action-btn" data-action="move-down" title="Mover hacia abajo" aria-label="Mover hacia abajo" ${index === fields.length - 1 ? "disabled" : ""}>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 19l5-5m-5 5l-5-5M12 19V5" />
+                            </svg>
+                        </button>
+                        <button class="action-btn" data-action="edit" title="Editar campo" aria-label="Editar campo">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M17 3a2.1 2.1 0 0 1 3 3L7.5 18.5l-4.5 1 1-4.5L17 3z" />
+                                <path d="M15 5l4 4" />
+                            </svg>
+                        </button>
+                        <button class="action-btn" data-action="duplicate" title="Duplicar campo" aria-label="Duplicar campo">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                        </button>
+                        <button class="action-btn danger" data-action="delete" title="Eliminar campo" aria-label="Eliminar campo">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 6h18" />
+                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                <path d="M10 11v6" />
+                                <path d="M14 11v6" />
+                                <path d="M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                fieldsContainer.appendChild(card);
+            });
+        }
+
+        function updateJsonOutput() {
+            const exported = fields.map(({ id, ...rest }) => {
+                const field = deepClone(rest);
+                const typeLower = String(rest.type || "").toLowerCase();
+                field.type = typeLower.toUpperCase();
+                if (field.type === "RADIO") {
+                    field.type = "RADIO_GROUP";
+                }
+                if (field.type === "TEL") {
+                    field.type = "PHONE";
+                }
+                if (!fieldTypesWithOptions.has(typeLower)) {
+                    delete field.options;
+                }
+                if (Array.isArray(field.options)) {
+                    field.options = field.options.map(option => {
+                        const normalizedOption = deepClone(option);
+                        if (Array.isArray(normalizedOption.validations) && normalizedOption.validations.length === 0) {
+                            delete normalizedOption.validations;
+                        }
+                        return normalizedOption;
+                    });
+                }
+                if (!fieldTypesWithLengths.has(typeLower)) {
+                    delete field.minLength;
+                    delete field.maxLength;
+                } else {
+                    if (field.minLength === undefined || field.minLength === null || field.minLength === "") {
+                        delete field.minLength;
+                    } else {
+                        field.minLength = Number(field.minLength);
+                    }
+                    if (field.maxLength === undefined || field.maxLength === null || field.maxLength === "") {
+                        delete field.maxLength;
+                    } else {
+                        field.maxLength = Number(field.maxLength);
+                    }
+                }
+                return field;
+            });
+            jsonOutput.value = exported.length ? JSON.stringify(exported, null, 2) : "";
+            if (typeof localStorage !== "undefined") {
+                try {
+                    if (jsonOutput.value.trim()) {
+                        localStorage.setItem("inscriptionsBuilderSchema", jsonOutput.value);
+                    } else {
+                        localStorage.removeItem("inscriptionsBuilderSchema");
+                    }
+                } catch (error) {
+                    console.warn("No se pudo guardar el formulario en localStorage:", error);
+                }
+            }
+        }
+
+        function loadFieldToForm(field) {
+            editingFieldId = field.id;
+            labelInput.value = field.label;
+            nameInput.value = field.name;
+            typeSelect.value = field.type;
+            placeholderInput.value = field.placeholder ?? "";
+            minLengthInput.value = field.minLength ?? "";
+            maxLengthInput.value = field.maxLength ?? "";
+            requiredInput.checked = Boolean(field.required);
+            showInTicketInput.checked = Boolean(field.showInTicket);
+            canEditInput.checked = Boolean(field.canEdit);
+            toggleOptionsSection(field.type, false);
+            toggleLengthConstraints(field.type, true);
+            optionsList.innerHTML = "";
+            if (field.options) {
+                field.options.forEach(option => addOptionRow(option));
+            }
+            submitButton.textContent = "Actualizar campo";
+            cancelEditButton.hidden = false;
+            labelInput.focus();
+            if (typeof fieldForm.scrollIntoView === "function") {
+                fieldForm.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        }
+
+        function duplicateField(field) {
+            const copy = typeof structuredClone === "function"
+                ? structuredClone(field)
+                : JSON.parse(JSON.stringify(field));
+            copy.id = generateId();
+            copy.name = `${copy.name}_${Math.random().toString(36).slice(2, 6)}`;
+            copy.label = `${copy.label} (copia)`;
+            fields.push(copy);
+            renderFields();
+            updateJsonOutput();
+            showMessage(formMessage, "Campo duplicado. Actualiza el identificador si es necesario.");
+        }
+
+        labelInput.addEventListener("input", () => {
+            const suggestion = slugify(labelInput.value);
+            const current = nameInput.value.trim();
+            if (!editingFieldId && (!current || current === slugify(current))) {
+                nameInput.value = suggestion;
+            }
+        });
+
+        typeSelect.addEventListener("change", () => {
+            const currentType = typeSelect.value;
+            toggleOptionsSection(currentType);
+            toggleLengthConstraints(currentType, fieldTypesWithLengths.has(currentType));
+        });
+
+        addOptionButton.addEventListener("click", () => addOptionRow());
+
+        optionsList.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-action]");
+            if (!button) return;
+            const action = button.dataset.action;
+            const optionRow = button.closest(".option-row");
+            const panel = optionRow?.querySelector(".validations-panel");
+            switch (action) {
+                case "remove-option":
+                    optionRow.remove();
+                    break;
+                case "toggle-validations":
+                    if (panel) {
+                        panel.classList.toggle("hidden");
+                    }
+                    break;
+                case "add-validation":
+                    if (panel) {
+                        const list = panel.querySelector(".validation-list");
+                        addValidationRow(list);
+                        panel.classList.remove("hidden");
+                    }
+                    break;
+                case "remove-validation":
+                    button.closest(".validation-row").remove();
+                    break;
+                default:
+                    break;
+            }
+            if (optionRow && action !== "toggle-validations") {
+                updateOptionValidationCount(optionRow);
+            }
+        });
+
+        optionsList.addEventListener("change", (event) => {
+            if (event.target.classList.contains("validation-type")) {
+                const validationRow = event.target.closest(".validation-row");
+                syncValidationRow(validationRow);
+                updateOptionValidationCount(validationRow.closest(".option-row"));
+            }
+        });
+
+        fieldForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            try {
+                const payload = prepareFieldPayload();
+                updateFields(payload);
+            } catch (error) {
+                showMessage(formMessage, error.message, "error");
+            }
+        });
+
+        cancelEditButton.addEventListener("click", () => {
+            resetForm();
+            showMessage(formMessage, "Edición cancelada.");
+        });
+
+        fieldsContainer.addEventListener("click", (event) => {
+            const action = event.target.dataset.action;
+            if (!action) return;
+            const card = event.target.closest(".field-card");
+            const fieldId = card.dataset.fieldId;
+            const index = fields.findIndex(field => field.id === fieldId);
+            const field = fields[index];
+
+            switch (action) {
+                case "edit":
+                    loadFieldToForm(field);
+                    break;
+                case "delete":
+                    fields.splice(index, 1);
+                    renderFields();
+                    updateJsonOutput();
+                    showMessage(formMessage, "Campo eliminado.");
+                    break;
+                case "duplicate":
+                    duplicateField(field);
+                    break;
+                case "move-up":
+                    if (index > 0) {
+                        [fields[index - 1], fields[index]] = [fields[index], fields[index - 1]];
+                        renderFields();
+                        updateJsonOutput();
+                    }
+                    break;
+                case "move-down":
+                    if (index < fields.length - 1) {
+                        [fields[index + 1], fields[index]] = [fields[index], fields[index + 1]];
+                        renderFields();
+                        updateJsonOutput();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        loadButton.addEventListener("click", () => {
+            const content = jsonOutput.value;
+            if (!content.trim()) {
+                showMessage(copyMessage, "Pega un JSON en el área antes de cargarlo.", "error");
+                return;
+            }
+            try {
+                importFieldsFromJson(content);
+                showMessage(copyMessage, "Formulario cargado desde el JSON.");
+                if (typeof localStorage !== "undefined") {
+                    localStorage.setItem("inscriptionsBuilderSchema", content);
+                }
+            } catch (error) {
+                showMessage(copyMessage, error.message, "error");
+            }
+        });
+
+        copyButton.addEventListener("click", async () => {
+            if (!jsonOutput.value.trim()) {
+                showMessage(copyMessage, "No hay JSON para copiar.", "error");
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(jsonOutput.value);
+                showMessage(copyMessage, "JSON copiado al portapapeles.");
+            } catch (error) {
+                showMessage(copyMessage, "No se pudo copiar automáticamente. Selecciona y copia manualmente.", "error");
+            }
+        });
+
+        toggleOptionsSection(typeSelect.value, false);
+        toggleLengthConstraints(typeSelect.value, false);
+        if (typeof localStorage !== "undefined") {
+            const savedSchema = localStorage.getItem("inscriptionsBuilderSchema");
+            if (savedSchema) {
+                try {
+                    jsonOutput.value = savedSchema;
+                    importFieldsFromJson(savedSchema);
+                    showMessage(copyMessage, "Formulario restaurado desde el guardado automático.");
+                } catch (error) {
+                    console.warn("No se pudo restaurar el formulario guardado:", error);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
