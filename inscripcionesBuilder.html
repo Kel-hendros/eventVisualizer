@@ -399,6 +399,22 @@
             margin: 0;
             font-size: 1rem;
             color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .field-counter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            background: #eef2ff;
+            color: #312e81;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: 700;
         }
 
         .field-meta {
@@ -726,7 +742,7 @@
             </form>
 
             <div class="fields-list" aria-live="polite">
-                <h2>Campos del formulario</h2>
+                <h2>Campos del formulario (<span id="fields-count">0</span>)</h2>
                 <p id="empty-state" style="margin:0; font-size:0.9rem; color:#64748b;">Aún no hay campos. Agrega el
                     primero para comenzar.</p>
                 <div id="fields-container"></div>
@@ -763,6 +779,7 @@
         const addOptionButton = document.getElementById("add-option");
         const fieldsContainer = document.getElementById("fields-container");
         const emptyState = document.getElementById("empty-state");
+        const fieldsCount = document.getElementById("fields-count");
         const submitButton = document.getElementById("submit-field");
         const cancelEditButton = document.getElementById("cancel-edit");
         const formMessage = document.getElementById("form-message");
@@ -1193,6 +1210,9 @@
 
         function renderFields() {
             fieldsContainer.innerHTML = "";
+            if (fieldsCount) {
+                fieldsCount.textContent = fields.length;
+            }
             if (fields.length === 0) {
                 emptyState.hidden = false;
                 return;
@@ -1205,7 +1225,7 @@
                 card.innerHTML = `
                     <div class="field-details">
                         <div class="field-info">
-                            <h3>${field.label}</h3>
+                             <h3><span class="field-counter">${index + 1}</span>${field.label}</h3>
                             <p class="field-meta">
                                 <strong>Nombre del campo:</strong> <code>${field.name}</code>
                             </p>
